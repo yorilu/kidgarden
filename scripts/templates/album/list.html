@@ -1,0 +1,40 @@
+<% var core = require("base/core"), kd = require("models/kd"), isSelf = kd.isSelf(data.teacher_id), teacher = kd.get(data.teacher_id); %>
+<div class="album-info-area clearfix">
+    <a href="#/user/<%=data.teacher_id%>">
+        <img src="<%=core.getAvatar(data.teacher_id)%>" alt="" />
+    </a>
+    <div>
+        <p class="color-blue fa-sz-30"><%=teacher.name%></p>
+        <p class="fa-sz-20"><%=core.getTime(data.ts*1000)%></p>
+    </div>
+    <% if (isSelf) { %>
+        <i class="fa fa-trash-o fa-4x"></i>
+    <% } %>
+</div>
+<% if (data.desc) { %>
+    <p class="album-desc-area fa-sz-24"><%=data.desc%></p>
+    <% if (isSelf) { %>
+        <div class="album-edit-area clearfix">
+            <input class="fa-sz-24" type="text" value="<%=data.desc%>">
+        </div>
+    <% } %>
+<% } else { %>
+    <% if (isSelf) { %>
+        <div class="album-edit-area show-edit clearfix">
+            <input class="fa-sz-24" type="text" placeholder="说点什么吧，按回车修改">
+        </div>
+    <% } %>
+<% } %>
+<div class="album-pics-area clearfix">
+    <% for (var i = 0, l = data.pics.length;  i < l; i++) { %>
+        <% if ((i+1)%3 === 0) { %>
+            <img class="album-lazy trd-img" data-original="<%=core.getImg(data.pics[i])%>" data-key="<%=data.pics[i]%>" width="200" height="200" alt="">
+        <% } else { %>
+            <img class="album-lazy" data-original="<%=core.getImg(data.pics[i])%>" data-key="<%=data.pics[i]%>" width="200" height="200" alt="">
+        <% } %>
+    <% } %>
+</div>
+<div class="album-tips-area">
+    <i class="fa fa-eye fa-2x"></i>
+    <span class="fa-sz-20"><%=data.reader_count || 0%></span>
+</div>

@@ -1,0 +1,18 @@
+<% var kd = require("models/kd"), core = require("base/core"), parent = kd.get(data.parent_id), child = kd.get(data.child_id); %>
+<div class="reminder-time fa-sz-24">提醒时间：<%=data.alarm%></div>
+<div class="reminder-content fa-sz-24 clearfix">
+    <div class="reminder-content-left">
+        <div>
+            <img src="<%=core.getAvatar(data.child_id)%>" alt="" />
+        </div>
+        <span class="<%=child.sex === 0 ? "color-pink" : "color-blue"%>"><%=child.name + kd.getCall(parent.relation)%></span>
+    </div>
+    <div class="reminder-content-right">
+        <p class="reminder-title"><%=data.title%></p>
+        <% if (data.audit === 1) { var reader = data.readers[0], teacher = kd.get(reader.teacher_id); %>
+            <p class="reminder-tips"><%=core.getTime(reader.ts*1000)%> <%=teacher.name%> 已阅</p>
+        <% } else { %>
+            <a href="javascript:;" class="btn btn-primary">知道了</a>
+        <% } %>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+WIKI:
+http://my.kgcrm.net/redmine/
+luzx
+12345678
+
+
+Դ�룺
+http://my.kgcrm.net/redmine/projects/kgcrm/repository/revisions/master/show/mobi
+
+API:
+http://my.kgcrm.net/redmine/projects/kgcrm/wiki/Api_interface

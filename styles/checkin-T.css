@@ -1,0 +1,45 @@
+/**
+ * 老师考勤页面样式
+ *
+ * @author mingxin.huang
+ * @update 2015.06.05
+ */
+
+.app-view-checkin {
+
+}
+
+.app-view-checkin .app-view-nav {
+
+}
+
+.app-view-checkin .app-view-nav li {
+    float: left;
+    width: 240px;
+    padding: 15px 0;
+}
+.app-view-checkin .app-view-nav .active {
+    border-bottom: 2px solid #77b300;
+}
+.app-view-checkin .app-view-nav span {
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    padding: 5px 0;
+    text-align: center;
+    border-right: 1px solid #DDD;
+}
+.app-view-checkin .app-view-nav span:last-child {
+    border-right: none;
+}
+
+/*内容区域样式*/
+.checkin-content-panel {
+    width: 300%;
+    height: 100%;
+}
+.checkin-content-panel > div {
+    float: left;
+    width: 100%;
+    height: 100%;
+}

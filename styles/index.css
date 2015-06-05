@@ -1,0 +1,96 @@
+/**
+ * 首页模板样式
+ *
+ * @author mingxin.huang
+ * @update 2015.05.30
+ */
+
+.app-view-index {}
+
+/*首页头部样式*/
+.view-index-header {
+    height: 200px;
+}
+.view-index-header > div {
+    float: left;
+}
+.index-header-avatar {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    margin: 25px 25px 20px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -o-border-radius: 10px;
+    border-radius: 10px;
+}
+.index-header-avatar img {
+    width: 150px;
+    height: 150px;
+}
+.index-header-weather {
+    padding: 25px 0 0;
+}
+.index-header-weather p {
+    height: 75px;
+    line-height: 75px;
+    color: #FFF;
+    font-size: 30px;
+}
+.index-header-weather img {
+    height: 60px;
+    vertical-align: middle;
+}
+
+/*首页导航栏样式*/
+.view-index-nav {}
+.view-index-nav li {
+    float: left;
+    width: 240px;
+    height: 240px;
+    text-align: center;
+}
+.view-index-nav li a {
+    display: block;
+    width: 180px;
+    height: 180px;
+    margin: 30px auto 10px;
+    background-color: #73a839;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+}
+.view-index-nav .index-nav-album a {
+    background-color: #00c0ff;
+}
+.view-index-nav .index-nav-reminder a {
+    background-color: #36e1af;
+}
+.view-index-nav .index-nav-checkin a {
+    background-color: #80c701;
+}
+.view-index-nav .index-nav-flowers a {
+    background-color: #ffe200;
+}
+.view-index-nav .index-nav-msg a {
+    background-color: #e060c1;
+}
+.view-index-nav .index-nav-contacts a {
+    background-color: #ff601f;
+}
+.view-index-nav .index-nav-register a {
+    background-color: #ffb001;
+}
+.view-index-nav .index-nav-feedback a {
+    background-color: #aee874;
+}
+.view-index-nav .index-nav-log a {
+    background-color: #c5aecb;
+}
+.view-index-nav li i {
+    margin: 60px;
+}
+/*.view-index-nav li span {
+font-size: 20px;
+}*/

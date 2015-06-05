@@ -1,0 +1,60 @@
+/**
+ * 提醒页面样式
+ */
+
+.app-view-reminder {}
+
+.app-view-reminder ul {}
+.app-view-reminder ul li {
+    width: 680px;
+    padding: 0;
+}
+.app-view-reminder ul .reminder-readed {
+    color: #999;
+}
+
+.reminder-time {
+    height: 60px; 
+    line-height: 60px;
+    text-indent: 20px;
+    border-bottom: 1px solid #DDD;
+}
+
+.reminder-content {padding: 20px;}
+.reminder-content .reminder-content-left {
+    float: left;
+    width: 100px;
+    margin: 0 10px 0 0;
+    text-align: center;
+}
+.reminder-content .reminder-content-left div {
+    width: 90px; 
+    height: 90px; 
+    margin: auto;
+    overflow: hidden; 
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+}
+.reminder-content .reminder-content-left img {
+    width: 90px;
+    height: 90px;
+}
+.reminder-content .reminder-content-left span {
+
+}
+.reminder-content .reminder-content-right {
+    float: left;
+    width: 530px;
+}
+.reminder-content .reminder-content-right .reminder-title {
+    min-height: 100px;
+    line-height: 30px;
+}
+.reminder-content .reminder-content-right .reminder-tips {
+    text-align: right;
+}
+.reminder-content .reminder-content-right a {
+    float: right;
+}

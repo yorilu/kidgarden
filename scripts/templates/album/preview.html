@@ -1,0 +1,16 @@
+<% var core = require("base/core"), kd = require("models/kd"); %>
+<ul class="clearfix">
+    <% for (var i = 0, l = data.pics.length; i < l; i++) { %>
+        <li data-key="<%=data.pics[i]%>">
+            <i class="fa fa-spinner fa-spin fa-white fa-5x"></i>
+            <img src="<%=core.getImg(data.pics[i], "m")%>" alt="" />
+        </li>
+    <% } %>
+</ul>
+<span class="album-preview-pagin fa-sz-24"><%=data.currIndex+1%> / <%=data.pics.length%></span>
+<% if (kd.isSelf(data.teacher_id)) { %>
+    <div class="album-pic-handle-area">
+        <a href="javascript:;" class="btn btn-danger">删除图片</a>
+    </div>
+    <i class="fa fa-arrow-up fa-white fa-3x"></i>
+<% } %>
