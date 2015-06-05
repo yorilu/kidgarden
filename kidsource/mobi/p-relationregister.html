@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/part/register.css" rel="stylesheet" type="text/css" />
+	<title>个人资料</title>
+    <style type="text/css">
+        .cphoto, .cname{ padding-left: 15px;  font-family: "\5FAE\8F6F\96C5\9ED1",arial; }
+        .inpntline{ padding: 0px;}
+        .inpntline select, .inpntline input{ }
+        .btn{ border: none; height: 46px; line-height: 46px;}
+        .k{ top: 5px; left: 5px;}
+    </style>
+</head>
+<body>
+	<section class="html p-setup">
+        <section class="info">
+            <div class="infolines ovh p0">
+                <div class="dsb bgcfff mb1 lh24 ptr alir p10 pl0" id="J_headimg">
+                    <p class="k pta c66 fs12 l10">宝贝照片</p>
+                    <label class="v himgp lh24 dsilb ptr ovh vam c33"><img id="J_childphoto" class="headimg" src="http://7xix4h.com1.z0.glb.clouddn.com/images/head.jpg"></label>
+                    <i class="fa fa-angle-right mr5 c66"></i>
+                </div>
+                <div href="javascript:;" class="dsb bgcfff mb1 lh24 ptr alir p10 pl0" id="name">
+                    <p class="k pta c66 fs12 l10">姓名</p>
+                    <label class="v lh24 dsilb ptr ovh vam c33" id="J_childname">xxx</label>
+                </div>
+                <a href="javascript:;" class="dsb bgcfff mb1 lh24 ptr alir p10 pl0 label ovh" id="J_relation">
+                    <p class="k pta c66 fs12 l10">关系</p>
+                    <label class="lh24 dsilb ptc ovv vam c33">
+                        <span class="v">妈妈</span>
+                        <select id="J_relationsele" class="dsb pta l0 wp100 z5">
+                            <option value="0" selected="">妈妈</option>
+                            <option value="1">爸爸</option>
+                            <option value="2">爷爷</option>
+                            <option value="3">奶奶</option>
+                            <option value="4">叔叔</option>
+                            <option value="5">阿姨</option>
+                            <option value="6">其他</option>
+                        </select>
+                    </label>
+                    <i class="fa fa-angle-right mr5 c66"></i>
+                </a>
+                <a href="javascript:;" class="dsb bgcfff mb1 lh24 ptr alir p10 pl0" id="J_phone">
+                    <p class="k pta c66 fs12 l10">手机号</p>
+                    <label class="lh24 dsilb ptr ovh vam c33"><span class="v"></span><input class="dsb pta wp100 phone" value="" type="text" readonly /></label>
+                    <i class="fa fa-angle-right mr5 c66"></i>
+                </a>
+            </div>
+        </section>
+	</section>
+    <script type="text/javascript" src="assets/min/js/extend.js"></script>
+    <script type="text/javascript">
+    ;(function ($, window, document, undefined) {
+        var pRelationRegister = (function () {
+            return {
+                _locStorage: window.currLocStorage || {},
+                _gloConfig: window.globalConfig,
+                _isloading: false,
+                _childid: "",
+                _childname: "",
+                _getRalaton: function(val){
+                    var raletion = { 
+                        "0" : "妈妈",
+                        "1": "爸爸",
+                        "2": "爷爷",
+                        "3": "奶奶",
+                        "4": "叔叔",
+                        "5": "阿姨",
+                        "6": "其他"
+                    };
+                    return raletion[val];
+                },
+                _sendRequest: function(data){     
+                    var _this = this;               
+                    $.sendAjax({
+                        scope: _this,
+                        type: "POST",
+                        url:  _this._gloConfig.urlPrefix+"/crm/invite_parent/register",
+                        dataType: "json",
+                        data: JSON.stringify(data),
+                        beforeSend: function(){
+                            if(_this._isloading) return false;
+                            _this._isloading = true;
+                        },
+                        success: function(res, textStatus, jqXHR) {
+                            var str = "", ac;
+                            if(res.code !== 0){
+                                return false;
+                            }
+                            $.tipshow({
+                                "msg":"邀请成功",
+                                "type": "success"
+                            });
+                            _this._isloading = false;
+                        },
+                        error: function(){
+                            _this._isloading = false;
+                        }
+                    });
+                },
+                initPage: function(){
+                    //初始化底部菜单
+                    $.gentoolbar({
+                        mainToolBarTemp: this._gloConfig.mainParToolBarTpml,
+                        localToolBarTemp: '<a href="p-share.html" id="J_inviteOther" class="btn c66 dsb alic wp100">提交</a>'                            
+                    });
+                    //获取url中的参数
+                    var tickets = (($.getRequest()||"")["ticket"]||"").split("_");
+                    if(+tickets[0]) {
+                        this._childid = +tickets[0];
+                        $("#J_childphoto").attr("src", this._gloConfig.xijqwResUrl+"/avatar/"+this._childid);
+                    }
+                    if(tickets[1]) {
+                        this._classname = tickets[1];
+                        $("#J_childname").text(this._classname);
+                    }
+                },
+                bindEvent: function(){
+                    var _this = this;
+                    var J_relation = $("#J_relation");
+                    var J_relationsele = $("#J_relationsele");
+                    var J_phone = $("#J_phone");
+                    var data = {
+                        "data": {
+                            "child_id": _this._childid,
+                            "relation": +$("#J_relationsele").val(),
+                            "contact_info": {
+                                "mobi": ""
+                            }
+                        }
+                    };
+                    J_phone.on("click", function(event){
+                        var $this = $(this);
+                        var phonenum = $.trim(prompt("请输入您的手机号"));
+                        if(phonenum == ""){
+                            return false;
+                        }
+                        if(!/^[1][3|4|5|8][0-9]{9}$/ig.test(phonenum)){
+                            $.tipshow({"msg":"手机号格式不正确","type":"waring"});
+                            return false;
+                        }
+                        $this.find("label .v").text(phonenum);  
+                        $this.find("label .phone").val(phonenum);
+                        data["data"]["contact_info"]["mobi"] = phonenum;
+                    });
+                    J_relationsele.on("change", function(event){
+                        var $this = $(this);
+                        var relationval = $this.val();
+                        J_relation.find("label .v").text(_this._getRalaton(relationval));
+                        data["data"]["relation"] = +(relationval);
+                    });    
+                    //
+                    $("body").on("click", "#J_inviteOther", function(event){
+                        event.preventDefault();
+                        _this._sendRequest(data);
+                    });
+                },
+                init: function(){
+                    this.initPage();
+                    this.bindEvent();
+                }
+            };
+        })();
+        $(function(){
+            pRelationRegister.init();
+        });
+    })(jQuery, window, document);
+    </script>
+</body>
+</html>

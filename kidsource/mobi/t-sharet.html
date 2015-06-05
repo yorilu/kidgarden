@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+	<title>班级二维码</title>
+	<style type="text/css">
+		.code{ width: 200px; height: 200px;}
+		.code img{ width: 200px;}
+		.code img[src$=".gif"]{ height: 16px; width: 16px; position: absolute; left: 92px; top: 92px;}
+		.sharepop{ background: rgba(0,0,0,0.8);}
+   		.sharepop img{ width: 67px;}
+   		.main{ height: 340px; position: fixed; left: 0; width: 100%; padding:0 30px; top: 50%; margin-top: -170px;}
+	</style>
+</head>
+<body>
+	<section class="html psharet bgcfff">
+		<div class="main">
+			<div class="code alic ptr mauto">
+				<img id="J_codeimg" src="http://7xix4h.com1.z0.glb.clouddn.com/images/loading.gif">
+			</div>
+			<p class="text p10" id="J_rol"></p>
+			<div class="botbtn p10">
+				<a id="J_btn" href="javascript:;" class="btn dsb bg cff fs12 lh40 alic bdr5">分享</a>
+			</div>
+		</div>
+		<a id="sharepop" class="sharepop dsn ptf z5 hp100 wp100 pr10 alir cff" href="javascript:;">
+        	<img class="mr10 mb10" src="http://7xix4h.com1.z0.glb.clouddn.com/images/bg_share.png">
+        	<p>想要分享？请点击右上角分享出去吧</p>
+        </a>
+	</section>
+	<script type="text/javascript">
+		window.jsApiLists = [
+			'onMenuShareTimeline',
+			'onMenuShareAppMessage',
+			'onMenuShareQQ'
+		];
+	</script>
+	<script type="text/javascript" src="assets/min/js/config.js"></script>
+	<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script type="text/javascript" src="assets/min/js/jquery.js"></script>
+	<script type="text/javascript" src="assets/min/js/extend.js"></script>
+	<script type="text/javascript" src="assets/min/js/main.js"></script>
+	<script type="text/javascript">
+	;(function ($, window, document, undefined) {
+		var tShareT= (function () {
+            return {
+            	_parm:'',
+            	_cName:'',
+            	_tName:'',
+            	_locStorage: window.currLocStorage || {},
+                _gloConfig: window.globalConfig,
+				initPage: function(){
+					//初始化底部菜单
+					$.gentoolbar({
+						mainToolBarTemp: this._gloConfig.mainTeaToolBarTpml
+					});
+				},
+                initwx:function(){
+                	var _this = this;
+                	wx.ready(function(){
+            			wx.onMenuShareQQ({
+							title: '注册邀请',
+							desc: '我是'+_this._cName+'班'+_this._tName+'老师，咱们幼儿园开始使用kgcrm家长与教师的沟通平台，特别好用，请尽快登录微信关注使用（无需下载关注公众号，填写基本信息注册绑定即可使用，特别方便）。',
+							link: _this._gloConfig["domain"]+'/page-invitet.html?targ=qq'+_this._parm,
+							imgUrl: _this._gloConfig["xijqwResUrlShare"]+'/kg.jpg',
+							success: function (res) {
+								$('#sharepop').hide();
+							},
+							cancel: function (res) {
+								$('#sharepop').hide();
+							}
+						});
+						wx.onMenuShareAppMessage({
+							title: '注册邀请',
+							desc: '我是'+_this._cName+'班'+_this._tName+'老师，咱们幼儿园开始使用kgcrm家长与教师的沟通平台，特别好用，请尽快登录微信关注使用（无需下载关注公众号，填写基本信息注册绑定即可使用，特别方便）。',
+							link: _this._gloConfig["domain"]+'/page-invitet.html?targ=weixin'+_this._parm,
+							imgUrl: _this._gloConfig["xijqwResUrlShare"]+'/kg.jpg',
+							success: function (res) {
+								$('#sharepop').hide();
+							},
+							cancel: function (res) {
+								$('#sharepop').hide();
+							}
+						});
+						//
+						wx.showOptionMenu();
+            		})
+                },
+            	renderData:function(){
+            		var _this=this,
+                        c_id = $.getCurrClassId(_this._locStorage),
+                        t_id=$.getCurrUserId(_this._locStorage),
+                        cs = $.getRequest();
+            		_this._tName=$.getNameById(t_id,_this._locStorage);
+            		_this._cName=_this._locStorage[c_id]['title']||'';
+            		cs.shareto=='2'?$('#J_btn').html('分享给家长'):$('#J_btn').html('分享给老师');
+            		cs.shareto=='2'?$('#J_rol').html('将二维码直接分享给家长，让她直接扫码关注即可使用哦！'):$('#J_rol').html('将二维码分享给老师，让她直接扫码关注即可使用哦，或者直接扫描你本页面二维码！');
+                    $.sendAjax({
+                        scope: _this,
+                        type: "GET",
+                        url: _this._gloConfig.urlPrefix+"/crm/qr_invite/"+(cs.shareto=='2'?'parent':'teacher'),
+                        dataType: "json",
+                        success: function(res, textStatus, jqXHR, localStorage) {
+                            //更新localstorage最新状态
+                            _this._locStorage = localStorage;
+                            if(res.code !== 0){
+                                return false;
+                            }
+                            var data = res.data;
+                            $('#J_codeimg').attr('src', _this._gloConfig.xijqwResUrl+"/"+ data);
+                            _this._parm = '&cid='+c_id+'&tid='+t_id+'&tname='+encodeURI(_this._tName)+'&cname='+encodeURI(_this._cName)+'&shareto='+cs.shareto+'&ticket='+encodeURI(data);
+                            _this.initwx();
+                        }
+                    });
+            	},
+            	bindEvent:function(){
+            		var _this = this;
+            		$('#J_btn').click(function(){
+            			var ele =$('#sharepop');
+            			ele.show();
+            			setTimeout(function(){
+            				ele.hide();
+            			},10000);	            		
+					});
+					$('#sharepop').click(function(){
+						$(this).hide();
+					});
+            	},
+            	init: function(){
+					this.initPage();
+                    this.renderData();
+                    this.bindEvent();
+                }
+            };
+        })();
+		$(function(){
+            tShareT.init()
+        });
+	})(jQuery, window, document);
+	
+	</script>
+</body>
+</html>

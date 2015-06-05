@@ -1,0 +1,47 @@
+.datepicker  * {margin:0;padding:0; outline: 0;-webkit-tap-highlight-color:rgba(0,0,0,0);}
+.datepicker  *,.datepicker  *:before,.datepicker  *:after {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+.datepicker{background: rgba(255,255,255,0.8);  z-index: 9992;}
+.datepicker .dpls{ height: 220px;}
+.datepicker .dp-select{ padding: 0 0 0 1px; width: 25%; float: left; position: relative;}
+.datepicker .dpls1 .dp-select{ width: 100%;}
+.datepicker .dpls2 .dp-select{ width: 50%;}
+.datepicker .dpls3 .dp-select{ width: 33.3%;}
+.datepicker .dpls4 .dp-select{ width: 25%;}
+.datepicker .dpls5 .dp-select{ width: 20%;}
+.datepicker .dpls6 .dp-select{ width: 16.6%;}
+.datepicker .dp-select:nth-child(1){ padding: 0;}
+.datepicker .th{height: 30px; line-height: 30px;}
+.datepicker .list{ height: 150px;}
+.datepicker .list:before{ content: ""; display:block; height: 100%; width: 100%; position: absolute; background: rgba(0,0,0,0.2); z-index: 1;}
+.datepicker .list li{ height: 30px; line-height: 30px;}
+.datepicker li.o{ opacity: 0;}
+.datepicker .sp{left: 5%; top: 90px; width: 90%; height: 30px;}
+.datepicker .dp-btn{ height: 40px; padding: 1px 0 0;}
+.datepicker .dp-btn a{ width: 50%; background: rgba(0,0,0,0.2); height: 39px;line-height: 39px;}
+
+.datepickerdiv{ position: relative;}
+.datepickerdiv .dp-top,.datepickerdiv .prev,.datepickerdiv .next{ height: 40px; line-height: 40px;}
+.datepickerdiv .prev,.datepickerdiv .next{ width: 40px;}
+.datepickerdiv .prev,.datepickerdiv .next{background: rgba(255,255,255,0.3);}
+.datepickerdiv td{ border:1px solid #eee; width: 14.28%;}
+.datepickerdiv td a{ height: 30px; line-height: 30px; height: 30px;}
+.datepickerdiv .today{ color: #09bb07;}
+.datepickerdiv .active{ background: #deffde;}
+.datepickerdiv table{border-collapse:collapse;}
+a.leave-jia:before{content: "假"; display:block; position: absolute; left: 0;bottom: 0;  font-size: 12px; line-height: 14px;color: #ff0000;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

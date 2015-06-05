@@ -1,0 +1,14 @@
+{
+    "code": 0,
+    "msg": "ok",
+    "data": {
+        "id": 1,
+        "headimg": "http://7ximo5.com1.z0.glb.clouddn.com/imgshu.jpg",
+        "name": "王老师",
+        "time": "2012-12-12 12:12",
+        "title":"1这是通知标题",
+        "msg": "这是通知的信息什么的，一定记得回复啊",
+        "all": 20,
+        "get":0
+    }
+}

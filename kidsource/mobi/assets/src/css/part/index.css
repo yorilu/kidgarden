@@ -1,0 +1,44 @@
+@charset "utf-8";
+/* CSS Document */
+.mess{ padding:20px 0 20px 10px;}
+.head, .img, .headimg{ width: 50px;}
+.img, .headimg{ height:50px;}
+.day{ height: 20px; }
+.mess .tree{ width: 100px; opacity: 0.3; right:-30px;}
+.menu-box{ padding: 0 10px 20px;}
+.ls{min-width: 33%; padding:20px 0 0px 0;}
+.n{ height: 24px;}
+.ic{ margin: 0 auto; border-radius: 50%; width: 70px; height: 70px;}
+.ic i{ color: #fff; font-size: 24px; line-height: 70px;}
+.picture-o{ background: #84d5f0;}
+.bell-o{ background: #ffc24b;}
+.calendar{ background: #82d04d;}
+.envelope-o{ background: #aee874;}
+.heart-o{ background: #ff6f84;}
+.user-plus{ background: #6dcbb4;}
+.cogs{ background: #9f7a5d;}
+.comment-o{ background: #84bef0;}
+.list-alt{ background: #ff8a58;}
+.codepen{ background: #8fc19c;}
+.exchange{ background: #c5aecb;}
+.sun-o{background:#36e1af;}
+
+.arcis{ height: 40px;}
+.arcis .aa{ height: 80px; width: 30%; left: -5px; top: -20px;}
+.arcis .ab{ height: 50px; width: 15%; left: 25%; top: 10px;}
+.arcis .ac{ height: 80px; width: 30%; left: 35%; top: 5px;}
+.arcis .ad{ height: 80px; width: 25%; left: 60%;}
+.arcis .ae{ height: 80px; width: 30%; left: 80%; top: 15px;}
+.arcis .af{ height: 60px; width: 20%; left: 85%; top: -10px; opacity: 0.5;}
+.arcis .ag{ height: 60px; width: 20%; left: -5%; top: -30px; opacity: 0.5;}
+.arcis .ah{ height: 50px; width: 20%; left: 20%; top: -15px; opacity: 0.5;}
+.arcis .ai{ height: 60px; width: 20%; left: 70%; top: -10px; opacity: 0.5;}
+
+.guidecover{ background: rgba(0,0,0,0.8);}
+.guidecover .close{ position: fixed; width: 60%; left: 20%; bottom: 50px; top: auto;}
+.part1{ height: 60px; width: 60px; border:1px dashed #aaa; left: 5px; top: 15px;}
+.part1 .te{ width: 150px; left: 150px; top: 45px; color: #fff}
+.part1 .te img{ left: -80px; top: -20px; width: 100px;}
+
+
+

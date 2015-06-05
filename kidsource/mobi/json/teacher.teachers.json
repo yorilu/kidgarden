@@ -1,0 +1,42 @@
+{
+    "code": 0,
+    "msg": "ok",
+    "data": [
+        {
+            "id": 1,
+            "teacher":"王塞",
+            "role":"主班",
+            "headimg": "http://7ximo5.com1.z0.glb.clouddn.com/tea01.jpg",
+            "phone":"15812321233",
+            "borthday":"2012-15-15",
+            "sex":"男"
+        },
+        {
+            "id": 2,
+            "teacher":"李璐",
+            "role":"副班",
+            "headimg": "http://7ximo5.com1.z0.glb.clouddn.com/tea02.jpg",
+            "phone":"15812321233",
+            "borthday":"2012-11-15",
+            "sex":"女"
+        },
+        {
+            "id": 3,
+            "teacher":"田田",
+            "role":"副班",
+            "headimg": "http://7ximo5.com1.z0.glb.clouddn.com/tea03.jpg",
+            "phone":"15812321233",
+            "borthday":"2012-15-15",
+            "sex":"女"
+        },
+        {
+            "id": 4,
+            "teacher":"李芳",
+            "role":"其他",
+            "headimg": "http://7ximo5.com1.z0.glb.clouddn.com/tea04.jpg",
+            "phone":"15812321233",
+            "borthday":"2012-15-15",
+            "sex":"男"
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+@charset "utf-8";
+/* CSS Document */
+.chdayb-icon{ right: 20px; margin-top: -8px;}
+.ls.not{ padding: 0;}
+.liststatus .d{ border:1px solid #fff; background: rgba(0,0,0,0.7); width: 22px; height: 22px;}
+.liststatus.active .d{ display: block;}
+.addlate, .dellate{ height: 50px; border:3px dashed #ddd;}
+.addlate i, .dellate i{ margin: -12px 0 0 -5px;}
+.dellate.active i{ color: #1abc9c;}
+.listmsg .name{ padding: 3px 0 8px;}
+.pdo a.done{ background: #9a9a9a;}
+.th, .pdo a{height: 30px;}
+.th p{ line-height: 19px;}
+.listdays .ls:nth-child(2n+1){ background: #fff;}
+.listdays .d{ top: 50%; margin-top: -10px;}
+.latelist .close{ line-height: 40px; height: 40px;}
+.babylist{ background: #fff; overflow-y: scroll;}
+.babylist .status{ display: none;}
+.status, .name{  height: 24px;}
+.babylist .ls{ width: 20%;}
+.babylist .active{ color: #fff; background: #1abc9c;}
+.babylist .active a .name{ color: #fff;}
+.btns a{ height: 40px; line-height: 40px;}
+.btns a:nth-child(1){border-right:1px solid #fff;}
+.prevm,.nextm{ height: 40px; width: 40px; line-height: 40px; background: #fff; border-left:1px solid #f0f0f0;border-right:1px solid #f0f0f0;}
+.late{ color: #ff0000;}
+.sick{ color: #c87dc9;}
+.leave{ color: #2badf8;}
+.other{ color: #666;}
+.checktable{ height: 40px; line-height: 38px; width: 90px; background: #fafafa; border:1px solid #ddd;}
+.datepickerdiv a span{ font-size: 11px; line-height: 14px;}

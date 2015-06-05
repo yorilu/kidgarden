@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/part/tcheck.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/datepicker.css" rel="stylesheet" type="text/css" />
+	<title>请假申请</title>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=6"></script>
+</head>
+<body>
+	<section class="html t-check">
+		<section class="selectbox">
+			<section class="selects">
+				<div class="p10 ptr chdayb j_chday" style="padding-right:110px;">
+                    <input type="text" class="control" id="datepickera" readonly><i style="right:120px;" class="fa r0 pta tp50 chdayb-icon fa-angle-right"></i><a class="checktable bdr5 pta r10 t10 dsb alic fs12 c66" href="t-checkreport.html" class='btbtn' data-doajax="0">考勤报表</a>
+                </div>
+                <div class="liststatus mlr mb10 ovh bd-l bd-t">
+					<div class="st-ls not fl alic wp20 ptr">
+						<a href="javascript:;" class="addlate dsb ptr bgcfff"><i class="fa fa-plus pta lh24 tp50 lp50 c66 fs18"></i></a>
+					</div>
+					<div class="st-ls not fl alic wp20 ptr hide">
+						<a href="javascript:;" class="dellate dsb ptr bgcfff"><i class="fa fa-minus pta lh24 tp50 lp50 c66 fs18"></i></a>
+					</div>
+                    <div id="J_absencemodLoad" class="mod-load alic clear ptb c66"><img class="mr10" src="http://7xix4h.com1.z0.glb.clouddn.com/images/loading.gif">加载中……</div>
+                </div>
+			</section>
+			<section class="selects hide">
+				<div class="listmsg plr"></div>
+                <div id="J_modLoad" class="mod-load alic ptb c66"><img class="mr10" src="http://7xix4h.com1.z0.glb.clouddn.com/images/loading.gif">加载中……</div>
+                <div id="J_nodata" class="hide"><img class="ptf lp50 tp50" style="width:100px; margin:-37px 0 0 -50px; z-index:1;" src="http://7xix4h.com1.z0.glb.clouddn.com/images/empty.png"></div>
+            </section>
+		</section>
+		<section class="babylist ptf lp100b wp100 hp100 pb40 z5">
+            <div class="list"></div>
+			<div class="btns ptf lp100b b0 wp100">
+				<a href="javascript:;" class="btn bgcddd c33 cal dsb fl wp50 alic cff">取消</a>
+				<a href="javascript:;" class="btn bgc sure dsb fl wp50 alic cff">确定</a>
+			</div>
+		</section>
+    </section>
+    <script type="text/javascript" src="assets/min/js/datepicker.js"></script>
+    <script type="text/javascript" src="assets/min/js/extend.js"></script>
+    <script type="text/javascript">
+        ;(function ($, window, document, undefined){
+            var tCheckPage = (function(){
+                return {
+                    _locStorage: window.currLocStorage || {},
+                    _gloConfig: window.globalConfig,
+                    _imgs: null,
+                    _isloading: false,
+                    _isover: false,
+                    _pageSize: 10,
+                    _currpage: 1,
+                    _appdays: function (js, y, m){
+                        // 考勤报表
+                        var str = '';
+                        for(var i=0;i<js.length;i++){
+                            str += '<a href="javascript:;" class="ls plr pt5 pb5 dsb ptr c33" data-name="'+ $.getNameById((js[i]["child_id"]|| ""),this._locStorage)+
+                                    '" data-uid="'+js[i]["child_id"]+'" data-month="'+m+'" data-year="'+y+'">'+
+                                    '<p class="himgp vam dsilb mr10"><img src="'+ this._gloConfig.xijqwResUrl+"/avatar/"+js[i]["child_id"]+'"></p>'+ $.getNameById((js[i]["child_id"]|| ""),this._locStorage)+
+                                    '<p class="d pta r30"><span class="plr5 cf0">'+(js[i]["count"] || "")+'天</span></p></a>';
+                        }
+                        $('.listdays').html(str);
+                    },
+                    _getReportDataForChangeMonth: function(year, month, _this, callback){
+                        // 月份更新后重置报表考勤内容
+                        $.sendAjax({
+                            scope: _this,
+                            type: "GET",
+                            url:  _this._gloConfig.urlPrefix+"/crm/teachers/class_absence/month_report/"+year+"-"+month,
+                            dataType: "json",
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                //
+                                if(res.code !== 0){
+                                    return false;
+                                }
+                                // 重置考勤报表内容
+                                _this._appdays(res.data, year, month);
+                                //
+                                callback && callback.call(_this);
+                                //$this.data('doajax',1);
+                            }
+                        });
+                    },
+                    _changeMonthForReport: function($this, state, _this){
+                        // 月份更新后
+                        var par = $this.parent();
+                        var year = parseInt(par.attr('data-year'));
+                        var month = parseInt(par.attr('data-month'));
+                        if(state === "next"){
+                            month++
+                            if(month>12){
+                                year++;
+                                month=1;
+                            }
+                        }
+                        if(state === "prev"){
+                            month--
+                            if(month<1){
+                                year--;
+                                month = 12;
+                            }
+                        }
+                        par.attr('data-year',year);
+                        par.attr('data-month', $.formatDay(month));
+                        $('#datepickerb').val(year+'-'+ $.formatDay(month));
+                        // 日历重置
+                        _this._latelist.initialday(month,year);
+                        _this._getReportDataForChangeMonth(year,  $.formatDay(month), _this);
+                    },
+                    renderData: function(){
+                        var _this = this;
+                        var date = $('#datepickera').val();
+                        var absencemodLoad = $("#J_absencemodLoad");
+                        //
+                        $.sendAjax({
+                            scope: _this,
+                            type: "GET",
+                            url: _this._gloConfig.urlPrefix+'/crm/class/absence/'+date,
+                            dataType: "json",
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                //获取状态码
+                                if(res.code !== 0){
+                                    return false;
+                                };
+                                var getReason = function(sta){
+                                    if(sta === 0) return "<span class='late'>缺勤</span>";
+                                    if(sta === 1) return "<span class='sick'>病假</span>";
+                                    if(sta === 2) return "<span class='leave'>事假</span>";
+                                    if(sta === 3) return "<span class='other'>其他</span>";
+                                };
+                                var notstr = '', hasstr = '', data=res.data, childids = [], name = "";
+                                var class_id = $.getCurrClassId(_this._locStorage) || "";
+                                var allChildIds =  $.getChildIdsByClassId(class_id, _this._locStorage) || [];
+                                var len=data.length
+                                for(var i= 0; i<len; i++){
+                                    hasstr+='<div class="ls fl alic wp20 ptr pt10 bd-r bd-b bgcfff" data-uid="'+data[i]["child_id"]+'">\
+                                        <p class="status lh24 pta fs12">'+(getReason(data[i]["reason"]))+'</p>\
+                                        <p class="mlr5"><span class="img bdrp50 dsb ovh"><img class="dsb fl" src="'+_this._gloConfig.xijqwResUrl+'/avatar/'+data[i]["child_id"]+'"></span></p>\
+                                        <p class="name fs12 lh24">'+ $.getNameById((data[i]["child_id"] || ""), _this._locStorage) +'</p>\
+                                        <a class="del pta dsb r0" href="javascript:;" data-cid="'+data[i]["_id"]+'"><p class="d dsn bdrp50 cff"><i class="fa fa-times fs12 cff"></i></p></a>\
+                                    </div>';
+                                    childids.push(data[i]["child_id"]);
+                                }
+                                for(var n= 0, m=allChildIds.length; n<m; n++){
+                                    if(childids.indexOf(allChildIds[n]) === -1){
+                                        notstr+='<div class="ls wp20 fl alic wp25 ptr pt10 bd-r bd-b bgcfff" data-uid="'+allChildIds[n]+'">\
+                                            <p class="status lh24 pta fs12"><span class="late">缺勤</span></p>\
+                                            <p class="mlr5"><span class="img bdrp50 dsb ovh"><img class="dsb fl" data-lazy-src="'+_this._gloConfig.xijqwResUrl+'/avatar/'+allChildIds[n]+'"></span></p>\
+                                            <p class="name fs12 lh24">'+ $.getNameById( (allChildIds[n] || ""), _this._locStorage) +'</p>\
+                                            <a class="del pta dsb r0" href="javascript:;" data-cid=""><p class="d c66 hide dsn bdrp50"><i class="fa fa-times fs12 cff"></i></p></a>\
+                                        </div>';
+                                    }
+                                }
+                                //显示缺勤列表
+                                var box = $('.liststatus');
+                                box.find('.ls').remove();
+                                //
+                                box.prepend(hasstr);
+                                len?'':box.find('.st-ls').eq(1).hide().find('a').removeClass('active');
+                                //显示所有学生列表
+                                $('.babylist .list').html(notstr);
+                                var span = $('.babylist .list, .liststatus').find('.img');
+                                var listls = $('.liststatus .ls');
+                                var hei = span.eq(0).width();
+                                _this._imgs = span.find('img');
+                                span.css('height',hei);
+                                $('.liststatus .addlate, .liststatus .dellate').css('height',( (hei && hei+35) || 84 ));
+                                if(listls.length){
+                                    $('.liststatus .st-ls').show();
+                                }
+                            },
+                            errror: function(){
+                                 //
+                            },
+                            complete: function(){
+                                absencemodLoad.hide();
+                            }
+                        });
+                    },
+                    initDatepicker:function(){
+                        // 初始日历控件
+                        var date = new Date(),
+                            _this = this,
+                            y = date.getFullYear(),
+                            m = $.formatDay(date.getMonth()+ 1),
+                            d = $.formatDay(date.getDate());
+                        $('#datepickera').val(y+'-'+ $.formatDay(m) +'-'+$.formatDay(d));
+                        $('.j_chday').attr({'data-year':y,"data-month":m});
+                        //
+                        new DatePicker({
+                            "target":"#datepickera",
+                            "showtype":"scroll",
+                            "timeformat":"y-m-d",
+                            "timegroup":"y-m-d",
+                            "defaultdate":y+'-'+m+'-'+d
+                        });
+                    },
+                    _getLeaveData: function(page, modload){
+                        // 考勤申请列表
+                        var _this = this;
+                        $.sendAjax({
+                            scope: _this,
+                            type: "GET",
+                            url: _this._gloConfig.urlPrefix+'/crm/leave_apply/list/'+_this._pageSize+'/'+page,
+                            dataType: 'json',
+                            beforeSend: function(){
+                                if(_this._isloading) return false;
+                                _this._isloading = true;
+                                modload.show();
+                            },
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                //获取状态码
+                                if(res.code !== 0){
+                                    return false;
+                                }
+                                if(page !== 1 && _this._isover) {
+                                    return false;
+                                }
+                                var str = '', data = res.data, len=data.length, listmsg = $('.listmsg');
+                                if(page === 1 && len === 0){
+                                    //$.bodyempty(listmsg);
+                                    modload.hide();
+                                    $("#J_nodata").show();
+                                    _this._isover = true;
+                                    return false;
+                                }
+                                for(var i= 0; i<len; i++){
+                                    var ps = data[i].phone?'<p><a class="c" href="tel:'+data[i].phone+'"><i class="fa fa-phone"></i>：'+data[i].phone+'</a></p>':'<p><a class="ash" href="javascript:;"><i class="fa fa-phone fs12"></i>：未填写</a></p>';
+                                    var date = '<p class="vat">请假日期：<span class="dsilb vat">', arr=[];
+                                    for(var j= 0, l=data[i]["date"].length; j<l; j++){
+                                        date += ( $.formatDate(data[i]["date"][j], "yyyy-MM-dd")||"")+"<br />";
+                                    }
+                                    date += '</span></p><p>请假天数：'+l+'天</p>';
+                                    var d = (!data[i]['audit'] || data[i]['audit'] === 0) ? '<p class="pdo ovh pt10"><a href="javascript:;" class="do lh30 bgc dsb fr plr40 bdr5 cff" data-mid="'+data[i]['_id']+'">确认</a></p>' : '<p class="pdo ovh pt10"><a href="javascript:;" class="do lh30 done dsb fr plr40 bdr5 cff">已确认</a></p>';
+                                    //
+                                    str += '<div class="ls p10 mt10 ovh bgcfff">\
+                                        <div class="top pl50 pb5 ptr">\
+                                            <p class="himgp pta"><img src="'+_this._gloConfig.xijqwResUrl+'/avatar/'+data[i].child_id+'"></p>\
+                                            <p class="name fs13">'+ $.getNameById(data[i]['child_id'], _this._locStorage) + $.getRelationByParentId(data[i]['parent_id'], _this._locStorage)+'<span class="fwn fr c99">'+$.formatDate((data[i].ts||0)*1000, "yyyy-MM-dd hh:mm")+'</span></p>\
+                                            <p class="fwb">'+data[i].title+'</p>\
+                                        </div>\
+                                        <div class="pl50">\
+                                            '+ps+'\
+                                       '+date+'\
+                                        </div>'+d+'\
+                                    </div>';
+                                }
+                                //填充内容
+                                if(page === 1){
+                                    listmsg.html(str);
+                                }else{
+                                    listmsg.append(str);
+                                }
+                                if(len < _this._pageSize){
+                                    modload.show().html('已加载全部数据');
+                                    _this._isover = true;
+                                }
+                                _this._isloading = false;
+                            },
+                            error: function(){
+                                _this._isloading = false;
+                                if(page > 1){
+                                    _this._currpage = _this._currpage - 1;
+                                }
+                            }
+                        });
+                    },
+                    initPage: function(){
+                        //初始化底部菜单
+                        $.gentoolbar({
+                            pageId: "t-check",
+                            mainToolBarTemp: this._gloConfig.mainTeaToolBarTpml,
+                            localToolBarTemp:
+                                '<a href="javascript:;" id="J_todayqq" data-needref="0" data-doajax="1" class="btn fl c66 dsb alic wp50 active">今日缺勤</a>' +
+                                '<a href="javascript:;" id="J_sendleave" data-page="0" data-doajax="0" class="btn fl bd-l c66 dsb alic wp50">请假申请</a>'
+                        });
+                    },
+                    bindEvent: function(modload){
+                        var date = new Date(),
+                            y = date.getFullYear(),
+                            m = date.getMonth()+ 1,
+                            d = date.getDate(),
+                            _this = this,
+                            sels = $('.selectbox .selects'),
+                            addu = $('.ls.not'),
+                            _this = this,
+                            winw = $(window).width(),
+                            winh = $(window).height(),
+                            doc =  $(document),
+                            timer = null,
+                            sending = false;
+                        var datepickera = $('#datepickera');
+                        $('.babylist .list').css({'height':winh-50,'overflow-y':'scroll'});
+                        //
+                        //动态加载
+                        var J_sendleave = $("#J_sendleave");
+                        document.addEventListener("touchmove", function(e){
+                            clearTimeout(timer);
+                            timer = setTimeout(function() {
+                                var top = doc.scrollTop(),
+                                        doch = doc.height();
+                                if ((top + winh) > (doch - (_this._gloConfig.loadFireHeight || 200))){
+                                    if (_this._isover || _this._isloading){
+                                        return false;
+                                    }
+                                    $("#J_nodata").hide();
+                                    _this._getLeaveData( ++(_this._currpage), modload);
+                                }
+                            }, 50);
+                        }, false);
+                        //
+                        $("body").on("click", "#J_btnlist a", function(){
+                            // 底部按钮点击
+                            var $this = $(this);
+                            var i = $("#J_btnlist a").index($this);
+                            $(this).addClass('active').siblings().removeClass('active');
+                            sels.eq(i).removeClass('hide').siblings().addClass('hide');
+                            //
+                            if(i == 0){
+                                _this.renderData();
+                            }
+                            if(i==1){
+                                $("#J_nodata").hide();
+                                _this._getLeaveData(1, modload);
+                            }
+                        });
+                        // 弹出学生列表
+                        $('.addlate').on('click', function(){
+                            var $this = $(this);
+                            if(!$this.data('isclick')==true){
+                                _this._imgs.each(function(idx, elem){
+                                    var elem = $(elem);
+                                    elem.attr('src',elem.data('lazy-src')).removeAttr("data-lazy-src");
+                                });
+                                $this.data('isclick',true);
+                            }
+                            $('.babylist,.babylist .btns').animate({'left':0});
+                        });
+                        // 
+                        $('.dellate').on('fastclick', function(){
+                            $(this).parent().parent().toggleClass('active');
+                            $(this).toggleClass('active');
+                        });
+                        //
+                        datepickera.on('change', function(){
+                            $('.addlate').data('isclick',false);
+                            _this.renderData();
+                        });
+                        //
+                        $('body').on('click','.babylist .ls',function(){
+                            $(this).toggleClass('active');
+                        }).on('click','.babylist .sure',function(){
+                            if(sending){
+                                return false
+                            }
+                            // 添加学生缺勤
+                            var uids = [];
+                            var ins = $('.babylist .active');
+                            for(var i=0;i<ins.length;i++){
+                                uids.push(ins.eq(i).data('uid'));
+                            }
+                            if(!uids.length){
+                                $.tipshow({'msg':'请选择学生','type':'waring','ico':'times'});
+                                return false;
+                            }
+                            var ndate = datepickera.val();
+                            var data = {
+                                "data": {
+                                    "date": ndate,
+                                    "child_ids": uids
+                                }
+                            };
+                            $.sendAjax({
+                                scope: _this,
+                                type: "POST",
+                                url: window.globalConfig.urlPrefix+'/crm/class/absence/create',
+                                dataType: 'json',
+                                contentType: "application/json",
+                                data: JSON.stringify(data),
+                                beforeSend: function(){
+                                    if(sending){
+                                        return false
+                                    }
+                                    sending = true;
+                                },
+                                success: function(res, textStatus, jqXHR, localStorage) {
+                                    //更新localstorage最新状态
+                                    _this._locStorage = localStorage;
+                                    //获取状态码
+                                    if(res.code !== 0){
+                                        return false;
+                                    }
+                                    var data = res.data;
+                                    $.tipshow({
+                                        "msg":"添加成功",
+                                        "callback":function(){
+                                            ins.each(function(idx, elem){
+                                                var elem = $(elem);
+                                                var uid = elem.data("uid");
+                                                elem.removeClass('active').find(".del").attr("data-cid", (data[uid] || ""));
+                                            });
+                                            $('.liststatus').prepend(ins);
+                                            $('.liststatus .st-ls').show();
+                                            $('.babylist,.babylist .btns').animate({'left':-winw},500);
+                                            
+                                        }
+                                    });
+                                    //
+                                    ins.removeClass("active");
+                                    sending = false;
+                                },
+                                error: function(){
+                                    sending = false;
+                                }
+                            })
+                        }).on('click','.babylist .cal',function(){
+                            $('.babylist,.babylist .btns').animate({'left':-winw},500);
+                        }).on('click','.liststatus .del',function(){
+                            // 移除学生考勤
+                            var cid = $(this).data('cid');
+                            var $this = $(this);
+                            $.sendAjax({
+                                scope: _this,
+                                type: "GET",
+                                url: window.globalConfig.urlPrefix+'/crm/class/absence/del/'+cid,
+                                dataType: 'json',
+                                success: function(res, textStatus, jqXHR, localStorage) {
+                                    //更新localstorage最新状态
+                                    _this._locStorage = localStorage;
+                                    //获取状态码
+                                    if(res.code !== 0){
+                                        return false;
+                                    }
+                                    $.tipshow({
+                                        "msg":"移除成功",
+                                        "callback":function(){
+                                            $this.siblings('.status').addClass('late').html('缺勤');
+                                            $('.babylist .list').prepend($this.parent());
+                                            var box = $('.liststatus');
+                                            if(box.find('.ls').length==0){
+                                                box.find('.st-ls').eq(1).hide().find('a').toggleClass('active');
+                                                box.toggleClass('active');
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+                        }).on('click','.listmsg .do',function(){
+                            // 确认学生考勤申请
+                            var $this = $(this);
+                            if(!$this.hasClass('done')){
+                                var mid = $this.data('mid');
+                                $.sendAjax({
+                                    scope: _this,
+                                    type: "GET",
+                                    url:  _this._gloConfig.urlPrefix+'/crm/leave_apply/approve/'+mid,
+                                    dataType: "json",
+                                    success: function(res, textStatus, jqXHR, localStorage) {
+                                        //更新localstorage最新状态
+                                        _this._locStorage = localStorage;
+                                        //获取状态码
+                                        if(res.code !== 0){
+                                            return false;
+                                        }
+                                        $("#J_todayqq").attr("data-doajax", "0");
+                                        $.tipshow({
+                                            "msg":"确认成功",
+                                            "callback":function(){
+                                                $this.html('已确认').addClass('done');
+                                            }
+                                        })
+                                    }
+                                });
+
+                            }
+                        });
+                    },
+                    init: function(){
+                        var modload = $("#J_modLoad");
+                        //初始化时间控件
+                        this.initDatepicker();
+                        //
+                        this.initPage();
+                        //初始化数据
+                        this.renderData();
+                        //绑定事件
+                        this.bindEvent(modload);
+                    }
+                };
+            })();
+            //
+            $(function(){
+                //
+                tCheckPage.init();
+            });
+        })(jQuery, window, document);
+    </script>
+</body>
+</html>

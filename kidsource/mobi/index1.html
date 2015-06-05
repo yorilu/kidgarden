@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/part/index.css" rel="stylesheet" type="text/css" />
+	<title>幼儿园名称</title>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=1"></script>
+</head>
+<body>
+    <section class="html ptr index p0 l0 t0 wp100 bgcfff">
+        <section class="topmess ovh ptr" id="J_topmess">
+            <div class="mess ovh ptr bgc pt10 pl10">
+                <a href="t-editinfo.html" class="head fl dsb">
+                    <p class="img imgp ovh ptr z2"><img class="headimg t bdrp10" src="http://7xix4h.com1.z0.glb.clouddn.com/images/head.jpg"></p>
+                </a>
+                <div class="day cff fs12 ml60" id="wt">
+                    <p class="tem ml10 pb10"><span class="date"></span><span class="week ml5"></span></p>
+                    <p class="updt ml10"><span id="area">上海</span><span id="temperature" class="temperature ml10">25/18℃</span><span id="weather" class="weather cloud ml10">多云转晴</span><span id="air" class="ml10"></span><!--<span class="up ml10">更新于上午8:20</span>--></p>
+                </div>
+            </div>
+        </section>
+        <nav class="menu-box ovh">
+            <div class="ls fl">
+                <a href="t-albums.html" class="l dsb alic c33 bdr5">
+                    <p class="ic ovh picture-o"><i class="fa fs20 lh24  fa-picture-o"></i></p>
+                    <p class="n lh24 ovh fs14 c33">班级相册</p>
+                </a>
+            </div>
+            <div class="ls fl">
+                <a href="t-remind.html" class="l dsb alic c33 bdr5">
+                    <p class="ic ovh bell-o"><i class="fa fs20 lh24  fa-bell-o"></i></p>
+                    <p class="n lh24 ovh fs14 c33">事件提醒</p>
+                </a>
+            </div>
+            <div class="ls fl">
+                <a href="t-check.html" class="l dsb alic c33 bdr5">
+                    <p class="ic ovh calendar"><i class="fa fs20 lh24  fa-calendar"></i></p>
+                    <p class="n lh24 ovh fs14 c33">学生考勤</p>
+                </a>
+            </div>
+            <div class="ls fl">
+                <a href="t-redlist.html" class="l dsb alic c33 bdr5">
+                    <p class="ic ovh heart-o"><i class="fa fs20 lh24  fa-heart-o"></i></p>
+                    <p class="n lh24 ovh fs14 c33">红花榜</p>
+                </a>
+            </div>
+            <div class="ls fl">
+                <a href="t-message.html" class="l dsb alic c33 bdr5">
+                    <p class="ic ovh comment-o"><i class="fa fs20 lh24  fa-comment-o"></i></p>
+                    <p class="n lh24 ovh fs14 c33">班级消息</p>
+                </a>
+            </div>
+            <div class="ls fl">
+                <a href="t-maillist.html" class="l dsb alic c33 bdr5">
+                    <p class="ic ovh list-alt"><i class="fa fs20 lh24  fa-list-alt"></i></p>
+                    <p class="n lh24 ovh fs14 c33">通讯录</p>
+                </a>
+            </div>
+            <div class="ls fl">
+                <a href="t-apply.html" class="l dsb alic c33 bdr5">
+                    <p class="ic ovh user-plus"><i class="fa fs20 lh24  fa-user-plus"></i></p>
+                    <p class="n lh24 ovh fs14 c33">注册审核</p>
+                </a>
+            </div>
+            <div class="ls fl">
+                <a href="page-qa.html" class="l dsb alic c33 bdr5">
+                    <p class="ic ovh envelope-o"><i class="fa fs20 lh24  fa-envelope-o"></i></p>
+                    <p class="n lh24 ovh fs14 c33">产品反馈</p>
+                </a>
+            </div>
+            <div class="ls fl">
+                <a href="t-logs.html" class="l dsb alic c33 bdr5">
+                    <p class="ic ovh codepen"><i class="fa fs20 lh24 fa-codepen"></i></p>
+                    <p class="n lh24 ovh fs14 c33">操作记录</p>
+                </a>
+            </div>
+        </nav>
+    	<section class="guidecover pta hp100 wp100 z2 hide" id="you">
+    		<div class="part1 pta">
+    		  <p class="te pta">个人中心，教师家长，注册邀请<img class="pta" src="http://7xix4h.com1.z0.glb.clouddn.com/images/arr02.png"></p>
+            </div>
+    		<a href="javascript:;" data-close="#you" class="close ptf cff fs12 dfbtn">我知道了</a>
+    	</section>
+    </section>
+	<section id="page"></section>
+    <script type="text/javascript" src="assets/min/js/extend.js"></script>
+    <script type="text/javascript">
+    ;(function ($, window, document, undefined) {
+        var tIndexPage = (function(){
+            return {
+                _locStorage: window.currLocStorage || {},
+                _gloConfig: window.globalConfig,
+                setBoxHeight: function(J_topmess){
+                    var sc = $.getRequest(),
+                        win =  $(window),
+                        $winw = win.width(),
+                        $winh = win.height(),
+                        arr=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
+                        date = new Date();
+                    if(sc.type && sc.type=='demo'){
+                        $('#you').show();
+                    }
+                    J_topmess.find('.topmess').css('height',108);
+                    J_topmess.find('.date').html('今天'+(date.getMonth()+1)+'月'+date.getDate()+'日');
+                    J_topmess.find('.week').html(arr[date.getDay()]);
+                },
+                renderData: function(J_topmess){
+                    var _this = this;
+                    var user_id = (this._locStorage["curr"] && this._locStorage["curr"]["_id"]) || '';
+                    var kginfo = _this._locStorage[$.getCurrKgId(_this._locStorage)] || {};
+                    J_topmess.find('.headimg').attr('src', this._gloConfig.xijqwResUrl+'/avatar/'+user_id);
+                    if(kginfo && kginfo["title"]){
+                        document.title = kginfo["title"];
+                    }
+                    if(window.localStorage.getItem('first')){
+                        window.localStorage.removeItem('first');
+                        $('#you').show();
+                    }
+                    return;
+                },
+                bindEvent: function(){
+                    $('.c').click(function(){
+                        $('#you').hide();
+                    });
+                    $('#open').click(function(){
+                        $(this).find('.window').fadeIn(100)
+                    });
+                    //
+                    $('body').on('click', '*[data-close]', function() {
+                        $($(this).data('close')).hide();
+                    });
+                },
+                test: function(){
+                    $(".menu-box .l").each(function(idx, elem){
+                        var elem = $(elem);
+                        var ts = new Date().getTime();
+                        elem.attr("href",elem.attr("href").split("?")[0]+"?v="+ts);
+                    })
+                },
+                _getPm: function(n){
+                    var n = +n;
+                    if(n>0&&n<=50){
+                        return "优";
+                    }
+                    if(n>50&&n<=100){
+                        return "良";
+                    }
+                    if(n>100&&n<=150){
+                        return "轻度污染";
+                    }
+                    if(n>150&&n<200){
+                        return "中度污染";
+                    }
+                    if(n>200&&n<250){
+                        return "重度污染";
+                    }
+                    if(n>300){
+                        return "严重污染";
+                    }
+
+                },
+                _setWeather: function(){
+                    var _this = this;
+                    $.getJSON("http://api.map.baidu.com/telematics/v3/weather?location=上海&output=json&ak=GkysU7vfgx1QlTZK7cGRF3o9&callback=?", function(data)  {
+                        //console.log(arguments);
+                        $("#area").text(data.results[0]["currentCity"]);
+                        $("#temperature").html(data.results[0]["weather_data"][0]["temperature"]);
+                        $("#weather").html(data.results[0]["weather_data"][0]["weather"]);
+                        $("#air").html("空气"+_this._getPm(data.results[0]["pm25"]));
+                    });
+                },
+                init: function(){
+                    var  J_topmess = $("#J_topmess");
+                    this.renderData(J_topmess);
+                    this.bindEvent(J_topmess);
+                    this.setBoxHeight(J_topmess);
+                    this._setWeather();
+                    this.test();
+                    $("#refbtn").click(function(){
+                        window.location.href = window.location.href.split("?")[0]+'?v='+new Date().getTime();
+                    })
+                    $("#clear").click(function(){
+                        alert(window.localStorage.getItem("wxInfo"));
+                        window.localStorage.removeItem("wxInfo");
+                        alert(window.localStorage.getItem("wxInfo"));
+                    });
+                }
+            };
+        })();
+        //初始化
+        $(function(){
+            tIndexPage.init();
+        });
+    })(jQuery, window, document);
+    </script>
+</body>
+</html>

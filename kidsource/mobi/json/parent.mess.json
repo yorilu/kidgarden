@@ -1,0 +1,20 @@
+{
+    "code": 0,
+    "msg": "ok",
+    "data": {
+            "id": 1,
+            "name": "张佳佳",
+            "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head16.jpg",
+            "borthday":"2012-11-11",
+            "school":"阳光幼儿园",
+            "class":"大一班",
+            "sex":"男",
+            "phones":[
+            	{"id":2,"role":"妈妈","phone":"15823256236"},{"id":3,"role":"爸爸","phone":"15232563253"},{"id":4,"role":"爷爷","phone":"25452365231"}
+            ],
+            "temperature":"24 ~ 14℃",
+            "cloud":"多云转晴",
+            "updatetime":"2015/4/24 08:22"
+    }
+}
+

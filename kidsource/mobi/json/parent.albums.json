@@ -1,0 +1,96 @@
+{
+    "code": 0,
+    "msg": "ok",
+    "data": [
+        {
+            "id": 1,
+            "type": "album",
+            "author": "王塞",
+            "role":"老师",
+            "headimg": "http://7ximo5.com1.z0.glb.clouddn.com/tea07.jpg",
+            "time": "2015-04-20 13:50",
+            "isower": 1,
+            "intro": "今天孩子在幼儿园表现都很活泼，都玩的很高兴，这是他们的照片",
+            "imgs": [
+                "http://7ximo5.com1.z0.glb.clouddn.com/01.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/02.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/03.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/04.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/05.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/06.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/07.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/08.jpg"
+            ],
+            "thumbnail":[
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb01.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb02.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb03.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb04.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb05.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb06.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb07.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb08.jpg"
+            ]
+        },
+        {
+            "id": 3,
+            "type": "album",
+            "author": "刘兰",
+            "role":"老师",
+            "headimg": "http://7ximo5.com1.z0.glb.clouddn.com/tea06.jpg",
+            "time": "2015-04-17 09:12",
+            "isower": 1,
+            "intro": "玩得很活跃，活动积极参加，都是很可爱的孩子呢加油啊，老师在这里为你们高兴········",
+            "imgs": [
+                "http://7ximo5.com1.z0.glb.clouddn.com/15.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/14.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/13.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/12.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/11.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/10.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/09.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/08.jpg"
+            ],
+            "thumbnail":[
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb15.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb14.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb13.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb12.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb11.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb10.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb09.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb08.jpg"
+            ]
+        },
+        {
+            "id": 5,
+            "type": "album",
+            "author": "王璐",
+            "role":"老师",
+            "headimg": "http://7ximo5.com1.z0.glb.clouddn.com/tea05.jpg",
+            "time": "2015-04-12 7:12",
+            "isower": 0,
+            "intro": "动积极参加，都是很可爱的孩子呢加油啊，老师在这里为你们高兴········",
+            "imgs": [
+                "http://7ximo5.com1.z0.glb.clouddn.com/01.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/02.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/03.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/04.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/05.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/06.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/07.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/08.jpg"
+            ],
+            "thumbnail":[
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb01.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb02.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb03.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb04.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb05.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb06.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb07.jpg",
+                "http://7ximo5.com1.z0.glb.clouddn.com/thumb08.jpg"
+            ]
+        }
+    ]
+}

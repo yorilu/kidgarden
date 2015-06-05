@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/datepicker.css" rel="stylesheet" type="text/css" />
+	<title>个人中心</title>
+    <style type="text/css">
+        .edithead{ background: rgba(0,0,0,1); z-index: 9991; text-align: center;}
+        .do{ height: 40px; text-align: center; padding-top: 10px;}
+        .do a{ border: 1px solid #333; line-height: 30px; width: 100px; height: 30px; font-size: 14px; display: inline-block; border-radius: 10px 0 0 10px;}
+        .do a:nth-last-child(1){ border-left: none; border-radius: 0 10px 10px 0;}
+        .bot{ opacity: 0.4; }
+        .w{ margin: 0 auto; display: inline-block; overflow: hidden; position: relative;}
+        .showclip{ height: 20px; width: 20px; background: #fff; border-radius: 50%; right: -8px; bottom: -8px; position: absolute;}
+        .showcover{ height: 100px; width: 100px; border:1px dashed #fff;}
+        label.radio{ display: inline-block; margin-left: 20px; padding: 0 0 0 23px; overflow: hidden; position: relative;vertical-align:middle;}
+        label.radio input{ position: absolute; left: -999px; top: -999px;}
+        label.radio input+span{ display: block; height: 20px; width: 20px; border:2px solid #aaa; border-radius: 50%; position: absolute; left: 0; top: 50%; margin-top: -10px;}
+        label.radio input:checked+span{ background: #5cb85c; border:2px solid #5cb85c;}
+        label.radio input[disabled]+span{ border:2px solid #aaa;}
+    </style>
+    <script type="text/javascript">
+        window.jsApiLists = [
+            'chooseImage', //选择头像，编辑资料页面
+            'uploadImage' //上传头像，编辑资料页面
+        ];
+    </script>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js"></script>
+</head>
+<body>
+	<section class="html p-setup">
+		<section class="info pt10">
+			<div class="infolines ovh p0 bd-t bd-b bdce5 pl10 bgcfff">
+				<a href="javascript:;" class="dsb bgcfff mb1 lh24 ptr alir p10 pl0" id="J_headimg">
+					<p class="k pta c66 fs12 l10">宝贝照片</p>
+					<label class="v himgp lh24 dsilb ptr ovh vam c33"><img class="headimg" src="http://7xix4h.com1.z0.glb.clouddn.com/images/head.jpg"></label>
+					<i class="fa fa-angle-right mr5 c66"></i>
+				</a>
+				<a href="javascript:;" class="dsb bgcfff mb1 lh24 ptr alir p10 pl0 bd-t bdce5" id="name">
+					<p class="k pta c66 fs12 l10">宝贝姓名</p>
+					<label class="v lh24 dsilb ptr ovh vam c33">xxx</label>
+					<i class="fa fa-angle-right mr5 c66"></i>
+				</a>
+				<a href="javascript:;" class="dsb bgcfff mb1 lh24 ptr alir p10 pl0 bd-t bdce5" id="borthday">
+					<p class="k pta c66 fs12 l10">宝贝生日</p>
+					<label class="v lh24 dsilb ptr ovh vam c33"><span>xxxx-xx-xx</span><input id="borthdayinp" class="dsb pta wp100" value="" type="text" readonly /></label>
+					<i class="fa fa-angle-right mr5 c66"></i>
+				</a>
+				<a href="javascript:;" class="dsb bgcfff mb1 lh24 ptr alir p10 pl0 label ovh bd-t bdce5" id="sex">
+					<p class="k pta c66 fs12 l10">宝贝性别</p>
+					<label class="radio ovh c33"><input type="radio" name="sex" value="0" checked><span></span>女</label>
+                    <label class="radio ovh c33 mr10"><input type="radio" name="sex" value="1"><span></span>男</label>
+				</a>
+			</div>
+            <div class="ptf z5 hp100 wp100 bgcfff hide" id="J_valbox">
+                <p class="p10 pb40">
+                    <input type="text" id="J_val" class="controla">
+                </p>
+                <div class="plr ovh">
+                    <p class="pr10 fl wp50"><a href="javascript:;" id="J_cancel" class="dfbtn">取消</a></p>
+                    <p class="pl10 fl wp50"><a href="javascript:;" id="J_submit" class="dfbtn dfbtn-sub">确认</a></p>
+                </div>
+            </div>
+            <div class="infolines ovh p0 mt15 bd-t bd-b bdce5 pl10 bgcfff">
+                <a href="javascript:;" class="dsb lh24 ptr alir p10 pl0 bdce5">
+                    <p class="k pta c66 fs12 l10">地区</p>
+                    <label class="v lh24 dsilb ptr ovh vam c33">上海市闵行区北江燕路</label>
+                </a>
+                <a href="javascript:;" class="dsb lh24 ptr alir p10 pl0 bdce5 bd-t">
+                    <p class="k pta c66 fs12 l10">学校</p>
+                    <label class="v lh24 dsilb ptr ovh vam c33" id="scname">小红帽幼儿园</label>
+                </a>
+                <a href="javascript:;" class="dsb lh24 ptr alir p10 pl0 bdce5 bd-t">
+                    <p class="k pta c66 fs12 l10">班级</p>
+                    <label class="v lh24 dsilb ptr ovh vam c33" id="cname">大一班</label>
+                </a>
+            </div>
+		</section>
+		<div class="edithead ptf t0 lp100 hp100 wp100">
+            <div class="imgs ovh ptr">
+                <p class="w ovh">
+                    <img class="bot nomax wp100 ptr z1" src="">
+                    <img class="edit nomax wp100 pta z2"  src="">
+                    <a class="showcover dsb pta z4" href="javascript:;"><span class="showclip dsb"></span></a>
+                </p>
+            </div>
+            <div class="do psa b0 tauto">
+                <a href="javascript:;" class="cancel cff alic">取消</a><a href="javascript:;" class="goedit cff alic">确认选择</a>
+            </div>
+        </div>
+        <p id="testimg" class="pta z1 hide" style="opacity:0"><img class="nomax ptr" src=""></p>
+	</section>
+    <script type="text/javascript" src="assets/min/js/datepicker.js"></script>
+    <script type="text/javascript" src="assets/min/js/extend.js"></script>
+    <script type="text/javascript">
+    ;(function ($, window, document, undefined) {
+        var pEditinfoPage = (function () {
+            return {
+                _locStorage: window.currLocStorage || {},
+                _gloConfig: window.globalConfig,
+                _setSex: function(val, elem){
+                    // elem = elem || $('#sex');
+                    // elem.find("span").html((+val) ? "男" : "女" );
+                    // elem.find("#sexs").val(val);
+                },
+                _setName: function(name, elem){
+                    elem = elem || $('#name .v');
+                    elem.html(name);
+                },
+                _setPhone: function(phone, elem){
+                    elem = elem || $('.phone .v');
+                    elem.html(phone);
+                },
+                _setBirthday: function(bri, elem){
+                    elem = elem || $("#borthday span");
+                    var format = function(d){
+                        return (+d) < 10 ? "0"+ (+d) : d;
+                    }
+                    bri = bri.split("-")||[];
+                    if(bri.length){
+                        elem.html(bri[0]+"-"+format(bri[1] || "0")+"-"+format(bri[2] || "0"));
+                    }
+                },
+                initPage: function(){
+                    //初始化底部菜单
+                    $.gentoolbar({
+                        //pageId: "p-albums",
+                        mainToolBarTemp: this._gloConfig.mainParToolBarTpml,
+                        localToolBarTemp: '<a href="p-share.html" id="invite" class="botbtn btn fl c66 dsb alic wp100">邀请亲属进入</a>'
+                    });
+                },
+                renderData: function(){
+					var _this = this;
+                    var user_id = $.getCurrUserId(this._locStorage);
+                    if(!user_id) return;
+                    var child_info = $.getChildInfoByParentId(user_id, _this._locStorage);
+                    var child_birthday = $.formatDate(child_info["birthday"] || (new Date().getTime()), "yyyy-MM-dd");
+                    var dt = new DatePicker({
+                        "target":"#borthdayinp",
+                        "showtype":"scroll",
+                        "timeformat":"y-m-d",
+                        "timegroup":"y-m-d",
+                        "defaultdate": child_birthday
+                    });
+                    var parent_ids = $.getParentIdsByChildId($.getChildInfoByParentId(user_id,  _this._locStorage)["_id"] || "",  _this._locStorage), str;
+                    for(var i= 0, len=parent_ids.length; i<len; i++){
+                        $.getPhoneById(parent_ids[i], _this._locStorage);
+                        str = '<a href="javascript:;" class="dsb bgcfff mb1 lh24 ptr alir p10 pl0 phone bd-t bdce5" data-rid="'+parent_ids[i]+'">\
+                            <p class="k pta c66 fs12 l10">'+ $.getRelationByParentId(parent_ids[i], _this._locStorage)+'</p>\
+                            <label class="v lh24 dsilb ptr ovh vam c33">'+ ($.getPhoneById(parent_ids[i], _this._locStorage)||'请输入手机号')+'</label>\
+                            <i class="fa fa-angle-right mr5 c66"></i>\
+                        </a>';
+                    }
+                    $('.headimg').attr('src', _this._gloConfig.xijqwResUrl+"/avatar/"+ (child_info["_id"] || ""));
+                    // _this._setSex(child_info["sex"] || "");
+                    $('input[name="sex"][value="'+child_info["sex"]+'"]').attr('checked','checked');
+                    _this._setName(child_info["name"] || "");
+                    _this._setBirthday(child_birthday);
+                    _this._setPhone( $.getPhoneById(user_id, _this._locStorage) || "")
+                    $('.infolines').append(str);
+                    //
+                    var kginfo = _this._locStorage[$.getCurrKgId(_this._locStorage)] || {};
+                    if(kginfo && kginfo["title"]){
+                        $('#scname').html(kginfo["title"]);
+                    }
+                    $('#cname').html(_this._locStorage[$.getCurrClassId(_this._locStorage)]['title']||'班级名称');
+                    return;
+                },
+                bindEvent:function(){
+                    var $winw = window.innerWidth;
+                    var $winh = window.innerHeight;
+                    var maxh = $winh-60;
+                    $('.edithead .imgs').height($winh-60);
+                    var imgh = 0,imgw = 0,seew = 0,seeh = 0;
+
+                    var timg = $('.edithead .edit'),imgbox = $('.edithead .w'),showcover = $('.showcover'),gdleft = 0,gdtop = 0,hsquare=100,hummer =  $('.showcover'),scale = $('.showclip');
+                    var eletop=0, eleleft=0, smaxw = 0, smaxh = 0, maxhsq = 0,maxtop = 0,maxleft = 0;
+					var _this = this, localId, serverId, imgsrc, box = $('#testimg');
+
+                    var J_cancel = $('#J_cancel'), J_submit = $('#J_submit'), J_valbox=$('#J_valbox'), J_val=$('#J_val');
+                    //
+
+                    J_cancel.click(function(){
+                            J_valbox.hide();
+                        });
+                    J_submit.click(function(){
+                        var type=J_submit.attr('data-type');
+                        if(type=="name"){
+                            var val = J_val.val().replace(/\s/ig,'');
+                            if(val.length===0){
+                                $.tipshow({"msg":"请输入您的姓名","type":"waring"});
+                                return false;
+                            }else{
+                                $.tipshowopen({"msg":"正在提交···","type":"info","ico":"info"})
+                                $.sendAjax({
+                                    scope: _this,
+                                    type: "POST",
+                                    url: _this._gloConfig.urlPrefix+"/crm/childs/profile/update",
+                                    dataType: "json",
+                                    data: JSON.stringify({
+                                        "data": {
+                                            "name": val
+                                        }
+                                    }),
+                                    success: function(res, textStatus, jqXHR, localStorage) {
+                                        //更新localstorage最新状态
+                                        _this._locStorage = localStorage;
+                                        //获取状态码
+                                        if(res.code !== 0){
+                                            return false;
+                                        }
+                                        _this._setName(val)
+                                        $.tipshowclose({"msg":"修改成功","type":"info","ico":"info","callback":function(){
+                                            J_valbox.hide();
+                                        }});
+                                    }
+                                })
+                            }
+                        }else if(type=="phone"){
+                            var val = J_val.val().replace(/\s/ig,'');
+                            if(!/^[1][3|4|5|8][0-9]{9}$/ig.test(val)){
+                                $.tipshow({"msg":"手机号格式不正确","type":"waring"});
+                                return false;
+                            }else{
+                                $.tipshowopen({"msg":"正在提交···","type":"info","ico":"info"})
+                                $.sendAjax({
+                                    scope: _this,
+                                    type: "POST",
+                                    url: _this._gloConfig.urlPrefix+"/crm/parents/profile/update",
+                                    dataType: 'json',
+                                    contentType: "application/json",
+                                    data:  JSON.stringify({"data": {"contact_info": {"mobi": val } }}),
+                                    success: function(res, textStatus, jqXHR, localStorage) {
+                                        //更新localstorage最新状态
+                                        _this._locStorage = localStorage;
+                                        //获取状态码
+                                        if(res.code !== 0){
+                                            return false;
+                                        }
+                                        _this._setPhone(val, $('.phone .v'));
+                                        $.tipshowclose({"msg":"修改成功","type":"info","ico":"info","callback":function(){
+                                            J_valbox.hide();
+                                        }});
+                                    }
+                                });
+                            }
+                        }
+                    });
+                    $('.html').on('click','#name',function(){
+                        J_val.attr({'value':'','placeholder':'请输入您的姓名'})
+                        J_submit.attr('data-type',"name");
+                        J_valbox.show();
+                    }).on('click','.phone',function(){
+                        J_val.attr({'value':'','placeholder':'请输入您的手机号'})
+                        J_submit.attr({'data-type':"phone","data-pid":$(this).attr('data-rid')});
+                        J_valbox.show();
+                    }).on('change','#borthdayinp',function(){
+                        var $this = $(this);
+                        var val = $this.val();
+                        var uid = $('#uid').val();
+                        $.tipshowopen({"msg":"正在更新···","type":"info"});
+                        $.sendAjax({
+							scope: _this,	
+                            type: "POST",
+                            url: _this._gloConfig.urlPrefix+"/crm/childs/profile/update",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                "data": {
+                                    "birthday": val
+                                }
+                            }),
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                //获取状态码
+                                if(res.code !== 0){
+                                    return false;
+                                }
+                                _this._setBirthday(val, $("#borthday span"));
+                                $.tipshowclose({"msg":"修改成功","type":"info","ico":"info"});
+                            }
+                        })
+                    }).on('click','#J_headimg',function(){
+                        var $this = $(this).find('img');
+                        wx.chooseImage({
+                            success: function (res) {
+                                localId = res.localIds[0];
+                                var nimg = new Image;
+                                nimg.src=localId;
+                                nimg.onload=function(){
+                                    $('.edithead img').attr('src',localId);
+                                    document.body.addEventListener('touchmove',noscroll, false);
+                                    if(($.isAnd())){
+                                        imgw = this.width;
+                                        imgh = this.height;
+                                    }else{
+                                        box.find('img').attr('src',localId);
+                                        imgw = box.width();
+                                        imgh = box.height();
+                                        box.hide();
+                                    }
+                                    var s = ($winh-60)/$winw;
+                                    var is = imgh/imgw;
+                                    $('.edithead').css('left',0);
+                                    if(is>s){
+                                        seew = maxh*imgw/imgh;
+                                        seeh = maxh;
+                                        imgbox.css({'height':maxh,'width':seew});
+                                        gdtop = 0;
+                                        gdleft = imgbox.offset().left;
+                                    }else{
+                                        seew = $winw;
+                                        seeh = seew*imgh/imgw;
+                                        imgbox.css({'width':$winw,'height':seeh,'margin-top':(maxh-$winw*imgh/imgw)/2});
+                                        gdtop = (maxh-$winw*imgh/imgw)/2;
+                                        gdleft = 0;
+                                    }
+                                    eletop = (seeh-100)/2;
+                                    eleleft = (seew-100)/2;
+                                    smaxw = seew - eleleft;
+                                    smaxh = seeh - eletop;
+                                    maxhsq = smaxw>smaxh?smaxh:smaxw;
+                                    maxtop = seeh - 100;
+                                    maxleft = seew - 100;
+                                    showcover.css({'left':eleleft,'top':eletop})
+                                    timg.attr('style','clip:rect('+(seeh-100)/2+'px,'+((seew-100)/2+hsquare)+'px,'+((seeh-100)/2+hsquare)+'px,'+(seew-100)/2+'px)');
+                                }
+                            },
+                            errror: function(){
+                                alert("error");
+                            }
+                        });
+                    });
+
+                    $('input[name="sex"]').on('change',function(){
+                        var $this = $(this);
+                        var sexval = parseInt($this.val(), 10);
+                        if([0, 1].indexOf(sexval) < 0){
+                            $.tipshow({"msg":"请输入您的性别","type":"waring"});
+                            return false;
+                        }else {
+                            $.sendAjax({
+                                scope: _this,
+                                type: "POST",
+                                url: _this._gloConfig.urlPrefix + "/crm/childs/profile/update",
+                                dataType: 'json',
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    "data": {
+                                        "sex": sexval
+                                    }
+                                }),
+                                success: function (res, textStatus, jqXHR, localStorage) {
+                                    //更新localstorage最新状态
+                                    _this._locStorage = localStorage;
+                                    //获取状态码
+                                    if (res.code !== 0) {
+                                        return false;
+                                    }
+                                    // _this._setSex( +sexval);
+                                    $.tipshow({"msg": "修改成功", "type": "success", "ico": "check"});
+                                }
+                            })
+                        }
+                    });
+
+                    //
+                    // var src = 'http://7ximo5.com1.z0.glb.clouddn.com/test01.jpg';
+                    // var nimg = new Image;
+                    // nimg.src=src;
+                    // nimg.onload=function(){
+                    //     $('.edithead img').attr('src',src);
+                    //     document.body.addEventListener('touchmove',noscroll, false);
+
+                    //     imgw = this.width;
+                    //     imgh = this.height;
+                    //     var s = ($winh-60)/$winw;
+                    //     var is = imgh/imgw;
+                    //     $('.edithead').css('left',0);
+                    //     if(is>s){
+                    //         seew = maxh*imgw/imgh;
+                    //         seeh = maxh;
+                    //         imgbox.css({'height':maxh,'width':seew});
+                    //         gdtop = 0;
+                    //         gdleft = imgbox.offset().left;
+                    //     }else{
+                    //         seew = $winw;
+                    //         seeh = seew*imgh/imgw;
+                    //         imgbox.css({'width':$winw,'margin-top':(maxh-$winw*imgh/imgw)/2});
+                    //         gdtop = (maxh-$winw*imgh/imgw)/2;
+                    //         gdleft = 0;
+                    //     }
+                    //     eletop = (seeh-100)/2;
+                    //     eleleft = (seew-100)/2;
+                    //     smaxw = seew - eleleft;
+                    //     smaxh = seeh - eletop;
+                    //     maxhsq = smaxw>smaxh?smaxh:smaxw;
+                    //     maxtop = seeh - 100;
+                    //     maxleft = seew - 100;
+                    //     showcover.css({'left':eleleft,'top':eletop})
+                    //     timg.attr('style','clip:rect('+(seeh-100)/2+'px,'+((seew-100)/2+hsquare)+'px,'+((seeh-100)/2+hsquare)+'px,'+(seew-100)/2+'px)');
+                    // }
+
+
+
+
+
+
+                    var pagex=0, pagey=0, sx = 0, sy = 0, iss = false;
+
+                    hummer.on('mtouchstart',function(event,data){
+                        pagex = data.pagex;
+                        pagey = data.pagey;
+                    })
+                    hummer.on('mtouchmove',function(event,data){
+                        var feleleft = eleleft+data.pagex-pagex;
+                        var feletop = eletop+data.pagey-pagey
+                        if(iss){return false;}
+                        // if(feleleft<0 || feletop<0){ return false;}
+                        if(feletop<=0){feletop=0;}
+                        if(feleleft<=0){feleleft=0;}
+                        if(feletop>=maxtop){feletop=maxtop;}
+                        if(feleleft>=maxleft){feleleft=maxleft;}
+                        feleleft-=2;
+                        feletop-=2;
+                        hummer.css({'left':feleleft,'top':feletop});
+                        timg.attr('style','clip:rect('+feletop+'px,'+(feleleft+hsquare)+'px,'+(feletop+hsquare)+'px,'+feleleft+'px)');
+                    })
+                    hummer.on('mtouchend',function(){
+                        eleleft = parseInt(hummer.css('left'));
+                        eletop = parseInt(hummer.css('top'));
+                        smaxw = seew - eleleft;
+                        smaxh = seeh - eletop;
+                        maxhsq = smaxw>smaxh?smaxh:smaxw;
+                    })
+                    scale.on('mtouchstart',function(event,data){
+                        iss = true;
+                        sx = data.pagex;
+                        sy = data.pagey;
+                    })
+                    scale.on('mtouchend',function(){
+                        iss = false;
+                        hsquare = hummer.width();
+                        maxtop = seeh - hsquare;
+                        maxleft = seew - hsquare;
+                    })
+                    scale.on('mtouchmove',function(event,data){
+                        var cx = data.pagex - sx;
+                        var fhsquare = hsquare+cx;
+                        if(fhsquare>=maxhsq){return false;}
+                        hummer.css({'width':fhsquare,'height':fhsquare})
+                        timg.attr('style','clip:rect('+eletop+'px,'+(eleleft+fhsquare)+'px,'+(eletop+fhsquare)+'px,'+eleleft+'px)');
+                    })
+
+                    $('.edithead .cancel').click(function(){
+                        document.body.removeEventListener('touchmove',noscroll, false);
+                        $('.edithead').css('left',$winw);
+                    });
+                    $('.edithead .goedit').click(function(){
+                        document.body.removeEventListener('touchmove',noscroll, false);
+                        var sc = 120/hsquare;
+                        var offsetx = Math.abs(Math.ceil(eleleft*sc));
+                        var offsety = Math.abs(Math.ceil(eletop*sc));
+                        var clip = 'imageMogr2/auto-orient/thumbnail/'+(seew*120/hsquare)+'x/crop/!120x120a'+offsetx+'a'+offsety;
+                        wx.uploadImage({
+                            localId: localId,
+                            isShowProgressTips: 1,
+                            success: function (res) {
+                                serverId = res.serverId;
+                                var bl = 40/hsquare;
+                                $('.edithead').css('left',$winw);
+                                $('.headimg').attr('src',localId).addClass('nomax').css({'position':'absolute',"width":seew*40/hsquare,'left':-(eleleft*bl),'top':-(eletop*bl)});
+                                $.sendAjax({
+                                    scope: _this,
+                                    type: "GET",
+                                    url: _this._gloConfig.urlPrefix+'/crm/avatar/crop?media_id='+serverId+'&fop_str='+clip,
+                                    dataType: 'json',
+                                    success: function(res){
+                                    }
+                                })
+                            }
+                        });
+                    })
+                },
+                init: function(){
+                    this.initPage();
+                    this.renderData();
+                    this.bindEvent();
+
+                }
+            };
+        })();
+        $(function(){
+            pEditinfoPage.init();
+        });
+    })(jQuery, window, document);
+    </script>
+</body>
+</html>

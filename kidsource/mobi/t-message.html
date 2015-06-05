@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+	<title>班级消息</title>
+    <style type="text/css">
+        .t-message .type{ width: 50px;}
+        .t-message .sum{ height: 20px; margin-top: 1px;border-radius: 0 0 10px 10px; }
+    </style>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=6"></script>
+</head>
+<body>
+<section class="html t-message">
+    <div class="topline two">
+        <a href="javascript:;" data-eq="0" class="btbtn active" data-showbtnkey="message" data-ajax="1">班级消息</a>
+        <a href="javascript:;" data-eq="1" class="btbtn" data-showbtnkey="letter" data-ajax="0">站内信</a>
+    </div>
+    <section class="msglist">
+        <div class="list"></div>
+        <!--
+        <div class="botline">
+            <a href="index1.html" class="homei bg"><i class="fa fa-home"></i></a>
+            <a href="t-messagenew.html" id="newmsg"  class="blbtn bg">发消息</a>
+        </div>
+        -->
+        <div id="J_modLoad" class="mod-load alic ptb c66"><img class="mr10" src="http://7xix4h.com1.z0.glb.clouddn.com/images/loading.gif">加载中……</div>
+        <div id="J_nodatamsg" class="hide"><img class="ptf lp50 tp50" style="width:100px; margin:-37px 0 0 -50px; z-index:1;" src="http://7xix4h.com1.z0.glb.clouddn.com/images/empty.png"></div>
+    </section>
+    <section class="letters hide">
+        <div class="list pb40"></div>
+        <!--
+        <div class="botline">
+            <a href="index1.html" class="homei bg"><i class="fa fa-home"></i></a>
+            <a href="t-letternew.html" id="newnote" class="blbtn bg">发站内信</a>
+        </div>
+        -->
+        <div id="J_modLoadlet" class="mod-load alic ptb c66"><img class="mr10" src="http://7xix4h.com1.z0.glb.clouddn.com/images/loading.gif">加载中……</div>
+        <div id="J_nodatalet" class="hide"><img class="ptf lp50 tp50" style="width:100px; margin:-37px 0 0 -50px; z-index:1;" src="http://7xix4h.com1.z0.glb.clouddn.com/images/empty.png"></div>
+
+    </section>
+</section>
+<script type="text/javascript" src="assets/min/js/extend.js"></script>
+    <script type="text/javascript">
+        ;(function ($, window, document, undefined) {
+            var tMessagePage = (function () {
+                return {
+                    _locStorage: window.currLocStorage || {},
+                    _gloConfig: window.globalConfig,
+                    _botTootBar: null,
+                    _isloading: false,
+                    _isover: false,
+                    _currpage: 1,
+                    initPage: function(){
+                        //初始化底部菜单
+                        this._botTootBar = $.gentoolbar({
+                            pageId: "t-message",
+                            mainToolBarTemp: this._gloConfig.mainTeaToolBarTpml,
+                            localToolBarTemp:
+                                '<a href="t-messagenew.html" id="newmsg" data-showkey="message" class="btn c66 dsb alic wp100"><i class="fa fa-edit fs18 vam"></i>发消息</a>' +
+                                '<a href="t-letternew.html" id="newnote" data-showkey="letter" class="btn c66 dsb alic wp100 hide"><i class="fa fa-edit fs18 vam"></i>发站内信</a>'
+                        });
+                    },
+                    _getMessage: function(page, modload){
+                        var _this = this
+                        //班级消息
+                        $.sendAjax({
+                            scope: _this,
+                            type: "GET",
+                            url: _this._gloConfig.urlPrefix+"/crm/class/msg_down/history/10/"+page,
+                            dataType: "json",
+                            beforeSend: function(){
+                                if(_this._isloading) return false;
+                                _this._isloading = true;
+                                modload.show();
+                            },
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                //获取状态码
+                                if(res.code !== 0){
+                                    return false;
+                                };
+                                if(page !==1 && _this._isover) {
+                                    return false;
+                                }
+                                modload.hide();
+                                var len = res.data.length, listpanel =  $('.msglist .list');
+                                if(page === 1 && len === 0){
+                                    $("#J_nodatamsg").show();
+                                    modload.hide();
+                                    _this._isover = true;
+                                    return false;
+                                }
+                                var user_id = $.getCurrUserId(_this._locStorage);
+                                var str = '', lstr = '';
+                                var data = res.data;
+                                var teacher_id, de;
+                                for(var i= 0, len=data.length; i<len; i++){
+                                    teacher_id = data[i]["teacher_id"]
+                                    de = (teacher_id == user_id) ? '<a href="javascript:;" class="listdel pta t0 r20 fs18 lh30 c99" style="top:3px;" data-mid="'+data[i]["_id"]+'"><i class="fa fa-trash-o fs24"></i></a>':'';
+                                    str+='<div class="item ovh plr mt10 ptr"><a class="ls lsa ovh dsb ptr c33 pl60 bgcfff" href="t-messageshow.html?mid='+data[i]["_id"]+'">\
+                                        <p class="himgt pta l10 t10"><img src="'+this._gloConfig.xijqwResUrl+'/avatar/'+teacher_id+'"></p>\
+                                        <p class="pt10 fs14 ellipsis" style="padding-right:30px;">'+data[i]["title"]+'</p>\
+                                        <p class="pb10 fs12 ellipsis" style="padding-right: 110px;">'+ $.getNameById(teacher_id, _this._locStorage)+'<span class="fs12 pta r10 tauto" style="bottom: 9px;">'+ $.formatDate((data[i]["ts"]||0)*1000, "yyyy-MM-dd hh:mm")+'</span></p>\
+                                        </a>'+de+'\
+                                        <div class="sum bgcfff pr20 alir c99 fs12"><p class="fs12 ml20 dsilb"><i class="fa fa-eye"></i><span>'+data[i]["reader_count"]+'</span></p><p class="fs12 ml20 dsilb"><i class="fa fa-comment-o"></i><span>'+data[i]["chat_count"]+'</span></p></div>\
+                                    </div>';
+                                }
+                                //
+                                listpanel.html(str);
+                                if(len < 10){
+                                    _this._isover = true;
+                                }
+                                _this._isloading = false;
+                            },
+                            error: function(){
+                                _this._isloading = false;
+                                if(page > 1){
+                                    _this._currpage = _this._currpage - 1;
+                                }
+                            }
+                        });
+                    },
+                    _getLetter: function(){
+                        var _this = this;
+                        //站内信
+                        var relation = {0:'妈妈',1:"爸爸",2:"爷爷",3:"奶奶",4:"叔叔",5:"阿姨",6:"其他"};
+                        var modLoadlet = $("#J_modLoadlet")
+                        $.sendAjax({
+                            scope: _this,
+                            type: "GET",
+                            url: _this._gloConfig.urlPrefix+"/crm/mail_box/list",
+                            dataType: "json",
+                            beforeSend: function(){
+                                modLoadlet.show();
+                            },
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                //获取状态码
+                                if(res.code !== 0){
+                                    return false;
+                                };
+                                modLoadlet.hide();
+                                var user_id = $.getCurrUserId(_this._locStorage);
+                                var str = '', lstr = '';
+                                var teacher_id, de;
+                                var getName = function(to){
+                                    var arr = [];
+                                    for(var i=0; i<to.length; i++){
+                                        arr.push($.getNameById(to[i], _this._locStorage));
+                                    }
+                                    return arr.join(",");
+                                };
+                                var let = res.data, len=let.length;
+                                if(len){
+                                    for(var i= 0; i<len; i++){
+                                        //var pname = let[i]['boxes'][0] ? $.getNameById(let[i]['child_id'],_this._locStorage)+(relation[let[i]['boxes'][0]["relation"]] || "") : $.getNameById(let[i]['child_id'],_this._locStorage);
+                                        lstr += '<div class="item ovh plr mt10"><a class="ls lsa ovh dsb ptr c33 pl60 bgcfff" href="t-lettershow.html?lid='+let[i]["_id"]+'">\
+                                            <p class="himgp pta l10 t10"><img src="'+this._gloConfig.xijqwResUrl+'/avatar/'+let[i]['child_id']+'"></p>\
+                                            <p class="pt10 fs14 ellipsis">'+(let[i]['boxes'][0]["msg"]?let[i]['boxes'][0]["msg"]:'暂无消息')+'</p>\
+                                            <p class="pb10 fs12 ellipsis" style="padding-right: 110px;">'+$.getNameById(let[i]['child_id'],_this._locStorage)+'<span class="fs12 pta r10 tauto" style="bottom: 9px;">'+$.formatDate((let[i]["ts"]||0)*1000, "yyyy-MM-dd hh:mm")+'</span></p>\
+                                            </a>\
+                                        </div>';
+                                    }
+                                    $('.letters .list').html(lstr);
+                                }else{
+                                    $("#J_nodatalet").show();
+                                }
+                            },
+                            complete: function(){
+                            }
+                        });
+                    },
+                    renderData: function(page, modload){
+                        this._getMessage(page, modload);
+                    },
+                    bindEvent:function(modload){
+						var _this = this;
+                        var timer = null;
+                        $(".msglist").on('click','.listdel',function(event){
+                            event.stopPropagation();
+                            event.preventDefault();
+                            var $this = $(this);
+                            var mid = $this.data('mid');
+                            $.confirm({"msg":"确认删除？", "callback": function(data){
+                                if(!data)
+                                    return;
+                                $.sendAjax({
+									scope: _this,
+                                    type: "GET",
+                                    url: _this._gloConfig.urlPrefix+"/crm/class/msg_down/del/"+mid,
+                                    dataType: "json",
+                                    success: function(res) {
+                                        //更新localstorage最新状态
+                                        _this._locStorage = localStorage;
+                                        //获取状态码
+                                        if(res.code !== 0){
+                                            return false;
+                                        };
+                                        $.tipshow({
+                                            'msg':'删除成功',
+                                            'callback':function(){
+                                                $this.closest('.item').slideUp(500,function(){
+                                                    $this.closest('.ls').remove()
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }})
+                        });
+                        var doc = $(document), winh=window.innerHeight;
+                        //动态加载
+                        document.addEventListener("touchmove", function(e){
+                            clearTimeout(timer);
+                            timer = setTimeout(function() {
+                                var top = doc.scrollTop(),
+                                        doch = doc.height();
+                                if ((top + winh) > (doch - (_this._gloConfig.loadFireHeight || 200))){
+                                    if (_this._isover || _this._isloading){
+                                        return false;
+                                    }
+                                    _this._getMessage(++(_this._currpage), modload);
+                                }
+                            }, 50);
+                        }, false);
+
+                        //tab切换时刷新列表
+                        $('.topline a').bind('fastclick',function(){
+                            var $this = $(this);
+                            var eq = parseInt($this.attr('data-eq'));
+                            if(eq == 0){
+                                $("#J_nodatamsg").hide();
+                                $('.msglist').show();
+                                $('.letters').hide();
+                                if( !$this.hasClass('active')){
+                                    _this._getMessage(1, modload);
+                                }
+                            }else{
+                                $("#J_nodatalet").hide();
+                                $('.msglist').hide();
+                                $('.letters').show();
+                                if( !$this.hasClass('active')){
+                                    _this._getLetter();
+                                }
+                            }
+                            $this.addClass('active').siblings().removeClass('active');
+                            //切换底部发送按钮
+                            _this._botTootBar.setBtnItem($this.data("showbtnkey"));
+                        });
+                    },
+                    init: function(){
+                        var modload = $("#J_modLoad")
+                        this.initPage();
+                        this.renderData(this._currpage, modload);
+                        this.bindEvent(modload);
+                    }
+                };
+            })();
+            $(function(){
+                tMessagePage.init();
+            });
+        })(jQuery, window, document);
+    </script>
+</body>
+</html>

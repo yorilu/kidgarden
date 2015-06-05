@@ -1,0 +1,85 @@
+@charset "utf-8";
+/* CSS Document */
+/*tipshow提示框*/
+.extendpop{background: rgba(0,0,0,0.8);}
+.extendpop .popbox{ height: 140px; width: 300px; margin: -70px 0 0 -150px;left: 50%; top: 50%;}
+.extendpop .text{ height: 88px; border-bottom: 1px solid #e8e8e8; padding: 30px 0 0 0;}
+.extendpop .btn{ height: 52px; width: 100%;}
+.extendpop .btn a{ height: 52px; line-height: 52px;}
+.extendpop .cf{ border-left: 1px solid #e8e8e8;}
+
+.tippop{ top: 50%; height: 60px; left: 50%; width: 200px; margin: -30px 0 0 -100px;}
+.tippop .text{ padding: 15px 30px; height: 100px; line-height: 70px; border-radius: 4px;}
+.tippop .text i{ font-size: 18px; margin-right: 10px;  vertical-align: middle;}
+.tippop .waring{ background: #f2dede; border: 1px solid #ebccd1;color: #a94442;}
+.tippop .success{ background: #dff0d8; border: 1px solid #d6e9c6;color: #3c763d;}
+.tippop .info{ background: #d9edf7; border: 1px solid #bce8f1;color: #31708f;}
+
+.starting{ background: rgba(0,0,0,0.8);}
+.starting p{ top: 50%; margin-top: -13px;}
+.starting p img{ margin-right: 5px;}
+
+.infolines .k{ top: 50%; margin-top: -18px;line-height: 36px;}
+.infolines select,.infolines input{ height: 100px;opacity: 0.01;}
+.infolines .g{ height: 30px; width: 30px; border:1px solid #1abc9c;}
+.infolines .g i{ line-height: 28px;}
+
+/*原返回首页底部按钮代码  教师通讯录待用*/
+.botline,.botlineempty,.botlineab{position: fixed; left: 0; bottom: 0; z-index: 2; height: 45px; width: 100%; padding: 0 0 0 50px; border-top: 1px solid #ddd; background: rgba(255,255,255,0.7); text-align: center;}
+.botlineempty{ border-top: none; background: none;}
+.botlinert{ position:relative;}
+.botlineab,.botline .homei,.home{ position: absolute;}
+.botline .homei,.home{ left: 10px; top: 2px; height: 40px; width: 40px; border-radius: 50%;}
+.botline .homei i,.topline .homei i,.home i{ color: #fff; font-size: 24px; line-height: 40px;}
+.botline .blbtn{color: #fff; display: inline-block; margin: 4px 7px 0; height: 36px; padding: 0 20px; line-height: 36px; border-radius: 5px;}
+.home{ position: fixed; top: auto; bottom: 3px;}
+/*end*/
+
+.topline{ height: 45px;  background: #eee;}
+.topline .homei{position: absolute;left: 10px; top: 2px; height: 40px; width: 40px; border-radius: 50%; text-align: center;}
+.topline .btbtn{ display: block; float: left; border-left: 1px solid #fff; height: 45px; line-height: 45px; font-size: 16px; color: #333; text-align: center;}
+.topline a:nth-child(1){ border:none;}
+.topline .active{ background: #fff; color: #09bb07;}
+.topline.three .btbtn{ width: 33.3%;}
+.topline.two .btbtn{ width: 50%;}
+.bottab{ position: fixed; left: 0; bottom: 0; padding:0 0 0 60px; width: 100%;}
+.botlinereg{ position: absolute; padding: 0; height: 41px;}
+
+.photoswipt .list{width: 9999px;}
+.photoswipt .closeimg{ width: 48px;}
+.photoswipt .ls img{max-width: 100%; display: block; margin: 0 auto;}
+.photoswipt .ls img[src$=".gif"]{ width: 16px; position: absolute; left: 50%; top: 50%; margin: -28px 0 0 -8px;}
+.photoswipt .botdo{ border-top: 1px solid #ddd;}
+.photoswipt .botdo a{background: #fff; height: 40px; line-height: 40px;border-left:1px solid #111; color: #666;}
+.photoswipt .botdo a:nth-child(1){ border:none;}
+.photoswipt .botdo.one a{width: 100%;}
+.photoswipt .botdo.two a{ width: 50%;}
+
+.inpntline{ padding: 4px 0px; position: relative;}
+.t-title{ text-align: center; height: 45px; line-height: 44px; background: #fff; font-weight: bold;}
+.t-title p{ line-height: 44px;}
+
+.inpntline .rtip,.inpntline .rtip-red,.inpntline .rtip-ash{ position: absolute; right: 15px; top: 4px; line-height: 40px; font-size: 12px; color: #666;}
+.inpntline .tips{ font-size: 12px; padding-top: 3px;}
+.inpntline .rtip-red{color: #ff0000;}
+.inpntline .rtip-ash{color: #999;}
+.emptystartimg{ position: fixed; z-index: 9999; left: 50%; top: 50%; margin: -8px 0 0 -8px;}
+
+/*通用底部菜单栏*/
+.bottools{ height: 46px; padding: 0 46px; border-top: 1px solid #e6e6e6;}
+.bottools .back,.bottools .menus{ height: 46px;width: 46px; border-right:1px solid #e6e6e6; line-height: 45px;}
+.bottools i{line-height: 45px;}
+.bottools .menus{ border-right: none; border-left: 1px solid #e6e6e6;}
+.bottools .btn{ line-height: 45px;}
+.bottools .btn i{ margin-right: 5px;}
+.bottools .active{ color: #09bb07;}
+
+.menulist .menuList{ width: 170px; background: #fff; right: -170px; left: auto; padding: 40px 10px 50px;}
+.menulist .menutil{ background: #e6e6e6; line-height: 40px; height: 40px;}
+.menulist .m{ border-bottom: 1px solid #ddd; line-height: 40px;}
+.menulist .fa-check{line-height: 40px;}
+.menulist .active{ color: #09bb07;}
+.menulist .active .fa-check{ display: inline-block;}
+.menulist .mgohome{line-height: 40px; width: 150px; border-top: 1px solid #e6e6e6;}
+.menulist .menubox{ max-height: 100%;}
+/*end*/

@@ -1,0 +1,46 @@
+{
+    "code": 0,
+    "msg": "ok",
+    "data": [
+        {
+            "id": 1,
+            "name": "汪婉姬",
+            "borthday":"2015-12-12",
+            "sex":"男",
+            "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head15.jpg",
+            "phones":[
+                {"role":"妈妈","phone":"15632123652"},{"role":"爸爸","phone":"15632123652"},{"role":"爷爷","phone":"15632123652"}
+            ]
+        },
+        {
+            "id": 2,
+            "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head14.jpg",
+            "name": "李广权",
+            "borthday":"2015-12-12",
+            "sex":"男",
+            "phones":[
+                {"role":"爸爸","phone":"15632123652"},{"role":"妈妈","phone":"15632123652"},{"role":"爷爷","phone":"15632123652"}
+            ]
+        },
+        {
+            "id": 3,
+            "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head13.jpg",
+            "name": "张子寒",
+            "sex":"男",
+            "borthday":"2015-12-12",
+            "phones":[
+                {"role":"奶奶","phone":"15632123652"},{"role":"爸爸","phone":"15632123652"},{"role":"爷爷","phone":"15632123652"}
+            ]
+        },
+        {
+            "id": 4,
+            "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head12.jpg",
+            "name": "张惠",
+            "sex":"男",
+            "borthday":"2015-12-12",
+            "phones":[
+                {"role":"爷爷","phone":"15632123652"},{"role":"爸爸","phone":"15632123652"},{"role":"爷爷","phone":"15632123652"}
+            ]
+        }
+    ]
+}

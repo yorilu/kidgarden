@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/part/tmessagenew.css" rel="stylesheet" type="text/css" />
+    <title>新建班级消息</title>
+    <script type="text/javascript">
+        window.jsApiLists = [
+            'chooseImage', //选择头像，编辑资料页面
+            'uploadImage' //上传头像，编辑资料页面
+        ];
+    </script>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=111"></script>
+</head>
+<body>
+<section class="html t-messagenew">
+    <section class="tabtype ">
+        <div class="forminfo">
+            <form>
+                <div class="inpntline">
+                    <input class="control" id="ntitle" type="text" placeholder="请输入活动标题">
+                </div>
+                <div class="inpntline">
+                    <textarea class="control" id="ninfo" placeholder="请输入活动详情"></textarea>
+                </div>
+                <div class="annex" id="J_annex">
+                    <a href="javascript:;" id="J_plusImage" class="ls add"><i class="fa fa-plus"></i></a>
+                    <a href="javascript:;" id="J_minusImage" class="ls minus hide"><i class="fa fa-minus"></i></a>
+                </div>
+                <div class="tabselect">
+                    <p class="til">启用投票：</p>
+                    <label class="radio"><input type="radio" name="voteradio" value="0" checked><span></span>不启用</label>
+                    <label class="radio"><input type="radio" name="voteradio" value="1"><span></span>启用</label>
+                </div>
+                <div class="votels hide">
+                    <div class="vls ptr" style="padding-left: 23px;">
+                        <input type="text" class="control" name="vt" placeholder="请输入投票选项"><a class="c66 dsb pta r0 alic" href="javascript:;"><i class="fs24 fa fa-times"></i></a>
+                    </div>
+                    <div class="vls ptr" style="padding-left: 23px;">
+                        <input type="text" class="control" name="vt" placeholder="请输入投票选项"><a class="c66 dsb pta r0 alic" href="javascript:;"><i class="fs24 fa fa-times"></i></a>
+                    </div>
+                    <a href="javascript:;" class="addvls cd dsilb">添加选项</a>
+                </div>
+            </form>
+        </div>
+    </section>
+</section>
+<script type="text/javascript" src="assets/min/js/extend.js"></script>
+<script type="text/javascript">
+    ;(function ($, window, document, undefined) {
+        var tMessageNewPage = (function () {
+            return {
+                _locStorage: window.currLocStorage || {},
+                _gloConfig: window.globalConfig,
+                _imgsLength: 0,
+                _imgSum: 9,
+                _uploadImgIdx: 0,
+                _imgServerIds: [],
+                _sending: false,
+                _genImgHtml: function(localId){
+                    return '<div class="ls ptr J_imgpanel">' +
+                            '<a class="del J_del pta r0 hide" href="javascript:;"><i class="fa fa-times fs12 cff"></i></a>' +
+                            '<img src="'+localId+'" style="width:52px;" data-localid="'+localId+'" />'+
+                            '</div>';
+                },
+                _chooseImage: function(elem, callback){
+                    var _this = this;
+                    wx.chooseImage({
+                        success: function (res) {
+                            var str = [], localIds = res.localIds, len = localIds.length;
+                            if((_this._imgsLength + len) > _this._imgSum){
+                                $.tipshow({"msg": "图片总数不能超过9张"});
+                                return false;
+                            }
+                            for(var i=0; i<len; i++){
+                                str.push(_this._genImgHtml(localIds[i]));
+                            }
+                            elem.prepend(str.join(""));
+                            _this._imgsLength =  _this._imgsLength + len;
+                            callback.call(_this);
+                        }
+                    });
+                },
+                _initBtnShow: function(){
+                    var minusImage = $("#J_minusImage");
+                    if(this._imgsLength === 0){
+                        minusImage.hide();
+                    }else{
+                        minusImage.show();
+                    }
+                },
+                initPage: function(){
+                    //初始化底部菜单
+                    $.gentoolbar({
+                        pageId: "t-message",
+                        mainToolBarTemp: this._gloConfig.mainTeaToolBarTpml,
+                        localToolBarTemp: '<a href="javascript:void(0);" id="sentacti" class="btbtn btn fl bd-l c66 dsb alic wp100">发送</a>'
+                    });
+                },
+                renderData: function(messagenew){
+                    this._initBtnShow();
+                },
+                bindEvent:function(messagenew){
+					var _this = this;
+                    var panel = $("#J_annex");
+                    var minusImage = $("#J_minusImage");
+                    var plusImage = $("#J_plusImage");
+                    //
+                    plusImage.on("click", function(event){
+                        if(_this._imgsLength > _this._imgSum){
+                            $.tipshow({"msg": "图片总数不能超过9张"});
+                            return false;
+                        }
+                        _this._chooseImage(panel, _this._initBtnShow);
+                    });
+                    minusImage.on("click", function(event){
+                        $(this).toggleClass("active");
+                        panel.toggleClass("active");
+                    });
+                    panel.on("click", ".J_del", function(event){
+                        $(this).parents(".J_imgpanel").remove();
+                        _this._imgsLength = _this._imgsLength - 1;
+                        _this._initBtnShow();
+                    });
+                    //
+                    messagenew.on('click','input[name="voteradio"]',function(){
+                        if($(this).val() == 1){
+                            $('.votels').removeClass('hide');
+                        }else{
+                            $('.votels').addClass('hide');
+                        }
+                    });
+                    messagenew.on('click','.vls a',function(){
+                        $(this).parent().remove();
+                    });
+                    messagenew.find(".addvls").on('click', function(){
+                        $(this).before('<div class="vls ptr" style="padding-left: 23px;"><input type="text" class="control" name="vt" placeholder="请输入投票选项"><a class="c66 dsb pta r0 alic" href="javascript:;"><i class="fa fa-times fs24"></i></a></div>');
+                    });
+                    $("body").on('click',  "#sentacti", function(){
+                        var vls=[];
+                        var ntitleelem = $('#ntitle');
+                        var ninfoelem = $('#ninfo');
+                        var ntitle = ntitleelem.val().replace(/\s/ig,'');
+                        var ninfo = ninfoelem.val().replace(/\s/ig,'');
+                        if(ntitle.length<2){
+                            $.tipshow({"msg": "请输入活动标题",'type':'waring','ico':'times'});
+                            return false;
+                        }
+                        if(ninfo.length<2){
+                            $.tipshow({"msg": "请输入活动详情",'type':'waring','ico':'times'});
+                            return false;
+                        }
+                        var data = {
+                            "data": {
+                                "title": ntitle,
+                                "content": ninfo,
+                                "pics": []
+                            }
+                        };
+                        if($('input[name="voteradio"]:checked').val()==1){
+                            var vs = $('input[name="vt"]');
+                            for(var i=0;i<vs.length;i++){
+                                if(vs.eq(i).val().replace(/\s/ig,'').length==0){
+                                    $.alert({msg:'投票选项内容不可为空'});
+                                    return false;
+                                }else{
+                                    vls.push(vs.eq(i).val().replace(/\s/ig,''))
+                                }
+                            }
+                            data["data"]["vote"] = {"items": vls};
+                        }
+
+                        var imgs = $("#J_annex .J_imgpanel img"),
+                            imglen = imgs.length || 0;
+                        if(imglen){
+                            _this._uploadImg(imgs, imglen, data);
+                        }else{
+                            _this._submitData(data, ntitleelem, ninfoelem);
+                        }
+                    });
+                },
+                _uploadImg: function(imgs, imglen, data){
+                    var _this = this;
+                    wx.uploadImage({
+                        localId: imgs.eq(_this._uploadImgIdx).data("localid"),
+                        isShowProgressTips: 1,
+                        success: function (res) {
+                            _this._imgServerIds.push(res.serverId);
+                            if(_this._uploadImgIdx == (imglen-1)){
+                                _this._uploadImgIdx = 0;
+                                data["data"]["pics"] = _this._imgServerIds;
+                                _this._submitData(data, null, null);
+                                _this._imgServerIds = [];
+                            }else{
+                                _this._uploadImgIdx = _this._uploadImgIdx + 1;
+                                setTimeout(function(){                                
+                                    _this._uploadImg(imgs, imglen, data);
+                                }, 30);
+                            }
+                        }
+                    });
+                },
+                _submitData: function(data, ntitleelem, ninfoelem){
+                    var _this = this;
+                    $.sendAjax({
+                        scope: _this,
+                        type: "POST",
+                        url: _this._gloConfig.urlPrefix+"/crm/class/msg_down/add",
+                        dataType: 'json',
+                        contentType: "application/json",
+                        data: JSON.stringify(data),
+                        beforeSend: function(){
+                            if(_this._sending){
+                                //发送中直接返回false，不继续发送
+                                return false;
+                            }
+                            _this._sending = true;
+                        },
+                        success: function(res, textStatus, jqXHR, localStorage) {
+                            //更新localstorage最新状态
+                            _this._locStorage = localStorage;
+                            //获取状态码
+                            if(res.code !== 0){
+                                return false;
+                            }
+                            $.tipshow({
+                                'msg':'发布成功',
+                                'callback':function(){
+                                    window.location.href = "t-message.html";
+                                }
+                            });
+                            ntitleelem.val("");
+                            ninfoelem.val("");
+                            _this._sending = false;
+                        },
+                        error: function(){
+                            _this._sending = false;
+                        }
+                    });
+                },
+                init: function(){
+                    var messagenew = $(".t-messagenew");
+                    this.initPage();
+                    this.renderData(messagenew);
+                    this.bindEvent(messagenew);
+                }
+            };
+        })();
+        $(function(){
+            tMessageNewPage.init();
+        });
+    })(jQuery, window, document);
+</script>
+</body>
+</html>

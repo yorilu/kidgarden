@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/part/tremind.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/datepicker.css" rel="stylesheet" type="text/css" />
+	<title>提醒</title>
+    <style type="text/css">
+        .mod-load img{ height: 16px;}
+    </style>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=5"></script>
+</head>
+<body>
+	<section class="html t-apply">
+		<div class="list p10">
+		</div>
+        <div id="J_modLoad" class="mod-load alic ptb c66"><img class="mr10" src="http://7xix4h.com1.z0.glb.clouddn.com/images/loading.gif">加载中……</div>
+	</section>
+	<section class="newremind ptf lp100b t0 wp100 hp100 bgcfff z7" id="newremind">
+		<div class="forminfo">
+			<form class="p10">
+				<div class="inpntline"><textarea class="control pt5" id="ninfo" placeholder="请输入提醒内容"></textarea></div>
+				<div class="inpntline">
+					<label><input class="control" id="rtime" type="text" placeholder="选择提醒时间" readonly>
+					<p class="rtip">设置提醒时间</p></label>
+				</div>
+                <div class="teacher ovh pt10" id="teachers">
+                </div>
+			</form>
+		</div>
+		<div class="btns pta t0 b0 wp100">
+			<a href="javascript:;" class="btn bgcddd cal dsb alic fl c33 wp50">取消</a>
+			<a href="javascript:;" class="btn bgc sure dsb alic fl cff wp50">确定</a>
+		</div>
+	</section>
+    <script type="text/javascript" src="assets/min/js/datepicker.js"></script>
+    <script type="text/javascript" src="assets/min/js/extend.js"></script>
+    <script type="text/javascript">
+        ;(function ($, window, document, undefined) {
+            var pRemindPage = (function () {
+                return {
+                    _locStorage: window.currLocStorage || {},
+                    _gloConfig: window.globalConfig,
+                    _isloading: false,
+                    _isover: false,
+                    _loaddemo : $('#J_modLoad'),
+                    _currpage: 1,
+                    _pageSize: 10,
+                    _getListData: function(page){
+                        var _this = this;
+                        $.sendAjax({
+                            scope: _this,
+                            type: "GET",
+                            url: _this._gloConfig.urlPrefix+'/crm/child/reminds/history/'+_this._pageSize+'/'+page,
+                            dataType: 'json',
+                            beforeSend: function(){
+                                if(_this._isloading) return false;
+                                _this._isloading = true;
+                                _this._loaddemo.show();
+                            },
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                //获取状态码
+                                if(res.code !== 0){
+                                    return false;
+                                };
+                                var str = '', data = res.data;
+                                var len = data.length;
+                                if(page === 1 && len === 0){
+                                    $.bodyempty();
+                                    _this._loaddemo.hide();
+                                    _this._isover = true;
+                                    return false;
+                                }
+                                for(var i= 0; i<len; i++){
+                                    if(data[i].audit==1){
+                                        str+='<div class="ls ovh p10 mb10">\
+                                                <div class="status fs13 lh20">\
+                                                    <p class="time fl lh20">提醒时间：<span class="fwb">'+$.formatDate((data[i].ts||0)*1000,'yyyy-MM-dd hh:mm')+'</span></p>\
+                                                    <p class="is fr">已阅</p>\
+                                                </div>\
+                                                <div class="top ptr ptop">\
+                                                    <p class="tname fs14 lh24">'+$.getNameById(data[i].child_id,localStorage)+$.getRelationByParentId(data[i].parent_id,localStorage)+'</p>\
+                                                    <p class="preson fwb lh24 pt10">'+(data[i].title || "")+'</p>\
+                                                </div>\
+                                            </div>';
+                                    }else{
+                                        str+='<div class="ls ovh p10 mb10 rnot">\
+                                                <div class="status lh20 fs13 c">\
+                                                    <p class="time fl lh20">提醒时间：<span class="fwb">'+$.formatDate((data[i].ts||0)*1000, "yyyy-MM-dd hh:mm")+'</span></p>\
+                                                    <a class="del fr" href="javascript:;" data-rid="'+data[i]._id+'"><i class="fa fs18 fa-trash-o"></i></a>\
+                                                </div>\
+                                                <div class="top ptr ptop">\
+                                                    <p class="tname fs14 lh24">'+$.getNameById(data[i].child_id,localStorage)+$.getRelationByParentId(data[i].parent_id,localStorage)+'</p>\
+                                                    <p class="preson fwb lh24 pt10">'+(data[i].title || "")+'</p>\
+                                                </div>\
+                                            </div>';
+                                    }
+                                }
+                                $('.list').append(str);
+                                //
+                                if(len < _this._pageSize){
+                                    _this._isover = true;
+                                    _this._loaddemo.show().html('已加载全部数据');
+                                }
+                                _this._isloading = false;
+                            },
+                            error: function(){
+                                _this._isloading = false;
+                                if(page > 1){
+                                    _this._currpage = _this._currpage - 1;
+                                }
+                            }
+                        });
+                    },
+                    initPage: function(){
+                        //初始化底部菜单
+                        $.gentoolbar({
+                            pageId: "p-remind",
+                            mainToolBarTemp: this._gloConfig.mainParToolBarTpml,
+                            localToolBarTemp: '<a href="javascript:;" id="newrem" class="blbtn btn c66 dsb alic wp100">新建提醒</a>'
+                        });
+                    },
+                    renderData: function(){
+                        var _this = this;
+                        var class_id = $.getCurrClassId(_this._locStorage);
+                        if(!class_id) return;
+                        var teachers = $("#teachers");
+                        var teacher_ids = $.getTeacherIdsByClassId(class_id, _this._locStorage);
+                        var content = [], teacher_name="";
+                        for(var i=0, len=teacher_ids.length; i<len; i++){
+                            teacher_name = $.getNameById(teacher_ids[i], _this._locStorage);
+                            content.push('<div class="nls mr10 ovh fl" data-tid="'+teacher_ids[i]+'" style="height:64px;"><p class="himgt ovh bdrp10 mauto"><img src="'+_this._gloConfig.xijqwResUrl+"/avatar/"+ teacher_ids[i]+'"></p><p class="tah-name ellipsis ovh fs12 alic">'+teacher_name+'</p></div>');
+                        }
+                        teachers.html(content.join(""));
+                        //
+                        _this._getListData(_this._currpage)
+                    },
+                    bindEvent:function(){
+                        var $winw = window.innerWidth,
+                            $winh = window.innerHeight,
+                            newred = $('#newremind'),
+                            newrem = $("#newrem"),
+							_this = this,
+                            teachers = $('#teachers'),
+                            doc = $(document),
+                            sending = false, //ajax请求发送中
+                            setTimeHandle;
+                        //动态加载
+                        document.addEventListener("touchmove", function(e){
+                            clearTimeout(setTimeHandle);
+                            setTimeHandle = setTimeout(function() {
+                                var top = doc.scrollTop();
+                                var doch = doc.height();
+                                if ((top + $winh) > (doch - (_this._gloConfig.loadFireHeight || 200))) {
+                                    if (_this._isover || _this._isloading){
+                                        return false;
+                                    }
+                                    _this._getListData(++(_this._currpage));
+                                }
+                            }, 100);
+                        }, false);
+                        //
+                        newrem.on('click',function(){
+                            newred.animate({'left':0})
+                        });
+                        newred.find('.forminfo').css('height',$winh-50);
+                        //
+                        newred.on('click','.cal',function(){
+                            newred.animate({'left':-$winw})
+                        }).on('click','.sure',function(){
+                            var teacher = [];
+                            teachers.find(".active").each(function(idx, elem){
+                                teacher.push($(elem).data("tid"));
+                            });
+                            if(teacher.length == 0){
+                                $.tipshow({
+                                    'msg':'未选择老师',
+                                    "type":"waring",
+                                    "ico":"times"
+                                });
+                                return false;
+                            }
+                            var ninfo = $('#ninfo');
+                            var info = ninfo.val().replace(/\s/ig,'');
+                            if(info.length==0){
+                                $.tipshow({
+                                    'msg':'提醒信息不可为空',
+                                    "type":"waring",
+                                    "ico":"times"
+                                });
+                                return false;
+                            }
+                            var rtimeelem = $("#rtime");
+                            var rtime = $.trim(rtimeelem.val());
+                            if(!rtime){
+                                $.tipshow({
+                                    'msg':'时间不可为空',
+                                    "type":"waring",
+                                    "ico":"times"
+                                });
+                                return false;
+                            }
+                            //这个验证器有问题
+                            if(!(new Date(rtime) instanceof Date)){
+                                $.tipshow({
+                                    'msg':'时间不可为空',
+                                    "type":"waring",
+                                    "ico":"times"
+                                });
+                                return false;
+                            }
+                            $.sendAjax({
+								scope: _this,
+                                type: "POST",
+                                url: _this._gloConfig.urlPrefix+"/crm/child/reminds",
+                                dataType: "json",
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    "data": {
+                                        "teacher_ids": teacher,
+                                        "title": info,
+                                        "alarm": rtime
+                                    }
+                                }),
+                                beforeSend: function(){
+                                    if(sending){
+                                        //发送中直接返回false，不继续发送
+                                        return false;
+                                    }
+                                    sending = true;
+                                },
+                                success: function(res, textStatus, jqXHR, localStorage) {
+                                    //更新localstorage最新状态
+                                    _this._locStorage = localStorage;
+                                    //获取状态码
+                                    if(res.code !== 0){
+                                        return false;
+                                    }
+                                    $.tipshow({
+                                        'msg':'成功发送提醒',
+                                        "type":"success",
+                                        "ico":"check",
+                                        "callback":function(){
+                                            window.location.href = window.location.href;
+                                        }
+                                    });
+                                },
+                                complete: function(){
+                                    ninfo.val("");
+                                    rtimeelem.val("");
+                                    teachers.find(".active").removeClass("active");
+                                    sending = false;
+                                }
+                            });
+                        });
+                        $(".html").on('click','a.del',function(){
+                            var $this = $(this);
+                            var rid = $this.data('rid');
+                            $.confirm({"msg":"确认删除该提醒？",'callback':function(data){
+                                if(data==1){
+                                    $.sendAjax({
+										scope: _this,
+                                        type: "GET",
+                                        url: _this._gloConfig.urlPrefix+'/crm/child/reminds/del/'+rid,
+                                        dataType: 'json',
+                                        success: function(res, textStatus, jqXHR, localStorage) {
+                                            //更新localstorage最新状态
+                                            _this._locStorage = localStorage;
+                                            //获取状态码
+                                            if(res.code!=0){
+                                                return false;
+                                            }
+                                            $.tipshow({
+                                                'msg':'已删除',
+                                                "type":"success",
+                                                "ico":"check",
+                                                "callback":function(){
+                                                    $this.closest('.ls').remove();
+                                                }
+                                            });
+
+                                        }
+                                    })
+                                }
+                            }})
+                        });
+                        teachers.on('touchend','.nls',function(){
+                            $(this).toggleClass('active');
+                        });
+                    },
+                    setDatepicker: function(){
+                        var date = new Date(),
+                            y = date.getFullYear(),
+                            m = date.getMonth()+1,
+                            d = date.getDate(),
+                            h= date.getHours(),
+                            mi = date.getMinutes();
+                        new DatePicker({
+                            "target":"#rtime",
+                            "showtype":"scroll",
+                            "timeformat":"y-m-d h:i",
+                            "timegroup":"y-m-d-h-i",
+                            "defaultdate":y+'/'+m+'/'+d+' '+h+':'+mi
+                        });
+                    },
+                    init: function(){
+                        this.initPage();
+                        this.renderData();
+                        this.bindEvent();
+                        this.setDatepicker();
+                    }
+                };
+            })();
+            $(function(){
+                pRemindPage.init();
+            });
+        })(jQuery, window, document);
+    </script>
+</body>
+</html>

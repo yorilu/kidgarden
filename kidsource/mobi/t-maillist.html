@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+	<title>通讯录</title>
+    <style type="text/css">
+        .ls:nth-child(2n){ background: #fff;}
+        .ls a.delete{ background: #ff0000; width: 60px; height: 60px;}
+        .ls a.delete i{line-height: 60px;}
+        .ls .cd.g{ height: 30px; width: 30px; border:1px solid #09bb07;}
+        .ls .c66.g,.infolines .c66.g{ border:1px solid #666;}
+        .bot a{ height: 40px; line-height: 40px; border-left:1px solid #f0f0f0;}
+        .bot a:nth-child(1){ border: none;}
+    </style>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=6"></script>
+</head>
+<body>
+	<section class="html t-maillist">
+		<div class="studentlist ovh p10"></div>
+		<div class="teacherlist hide ovh"></div>
+        <!--
+        <div class="topline bottab two">
+            <a href="index1.html" class="homei bg"><i class="fa fa-home"></i></a>
+            <a href="javascript:;" data-eq="0" class='btbtn active'>宝贝通讯录</span></a>
+            <a href="javascript:;" data-eq="1" class='btbtn' data-ajax="0">教师通讯录</a>
+        </div>
+        -->
+	</section>
+	<div class="showstmess ptf dsn bgcf0f0f0 z7 hp100 wp100" id="showstmess">
+	</div>
+    <script type="text/javascript" src="assets/min/js/extend.js?v=22"></script>
+    <script type="text/javascript">
+        ;(function ($, window, document, undefined) {
+            var tMaillistPage = (function () {
+                return {
+                    _locStorage: window.currLocStorage || {},
+                    _gloConfig: window.globalConfig,
+                    _initstr: function(child_id){
+                        var _this = this;
+                        var numbs = [];
+                        var _locStorage = this._locStorage;
+                        var parent_ids = $.getParentIdsByChildId(child_id, _locStorage), ph='';
+                        for(var i= 0,len=parent_ids.length; i<len; i++){
+                            ph = $.getPhoneById(parent_ids[i], _locStorage);
+                            numbs.push('<div class="dsb bgcfff mb1 lh24 ptr alir p10 pl0">\
+                                <p class="k pta c66 fs12 l10">'+ $.getRelationByParentId(parent_ids[i], _locStorage)+'</p>\
+                                <a class="'+(ph?'c':'c c66')+' g phone bdrp50 dsilb ml20 alic" href="'+(ph?'tel:'+ph:'javascript:;')+'"><i class="fa fa-phone"></i></a>\
+                                <a class="c c66 g sms bdrp50 dsilb ml20 alic" href="javascript:;" data-uid="'+parent_ids[i]+'" data-type="sms"><i class="fa fa-envelope-o"></i></a>\
+                                <a class="c c66 g weixin bdrp50 dsilb ml20 alic" href="javascript:;" data-uid="'+parent_ids[i]+'" data-type="weixin"><i class="fa fa-weixin"></i></a>\
+                            </div>');
+                        }
+
+                        var str = '<div class="infolines">\
+                            <a href="javascript:;" class="dsb bgcfff mb1 lh24 ptr alir p10 pl0">\
+                                <p class="k pta c66 fs12 l10">头像</p>\
+                                <label class="v himgp lh24 dsilb ptr ovh vam c33"><img class="headimg" src="'+_this._gloConfig.xijqwResUrl+"/avatar/"+ child_id+'"></label>\
+                            </a>\
+                            <a href="javascript:;" class="dsb bgcfff mb1 lh24 ptr alir p10 pl0">\
+                                <p class="k pta c66 fs12 l10">姓名</p>\
+                                <label class="v lh24 dsilb ptc ovv vam c33">'+$.getNameById(child_id,_locStorage)+'</label>\
+                            </a>\
+                            <a href="javascript:;" class="dsb bgcfff mb1 lh24 ptr alir p10 pl0">\
+                                <p class="k pta c66 fs12 l10">性别</p>\
+                                <label class="v lh24 dsilb ptc ovv vam c33"><span>'+(!!_locStorage[child_id]["sex"]?"男":"女")+'</span></label>\
+                            </a>\
+                            <a href="javascript:;" class="dsb bgcfff mb1 lh24 ptr alir p10 pl0">\
+                                <p class="k pta c66 fs12 l10">生日</p>\
+                                <label class="v lh24 dsilb ptc ovv vam c33">'+($.formatDate(_locStorage[child_id]["birthday"], "yyyy-MM-dd") || "未填写")+'</label>\
+                            </a>'+numbs+'\
+                            </div>\
+                            <div class="bot pta b0 z3 wp100">\
+                                <a href="javascript:;" class="del bgcddd dsb fl wp50 alic c66 fs14" data-uid="'+child_id+'">移除</a>\
+                                <a href="javascript:;" class="cal bgc dsb fl wp50 alic cff fs14">关闭</a>\
+                            </div>';
+                        return str;
+                    },
+                    initPage: function(){
+                        //初始化底部菜单
+                        $.gentoolbar({
+                            pageId: "t-maillist",
+                            mainToolBarTemp: this._gloConfig.mainTeaToolBarTpml,
+                            localToolBarTemp:
+                                    '<a href="javascript:void(0);" data-eq="0" class="btbtn btn fl c66 dsb alic wp50 active">宝贝通讯录</a>' +
+                                    '<a href="javascript:void(0);" data-eq="1" data-ajax="0" class="btbtn btn fl bd-l c66 dsb alic wp50">教师通讯录</a>'
+                        });
+                    },
+                    renderData: function(){
+                        var _this = this;
+                        var clas = [], teach=[];
+                        //
+                        var class_id = $.getCurrClassId(this._locStorage);
+                        var child_ids = $.getChildIdsByClassId(class_id, this._locStorage);
+                        var teacher_ids = $.getTeacherIdsByClassId(class_id, this._locStorage);
+                        var studentlist = $('.studentlist'), len=child_ids.length;
+                        if(len){
+                            for(var i= 0; i<len; i++){
+                                clas.push('<div class="tls fl ptr wp20 plr5 pb10 alic" data-eq="'+i+'" data-uid="'+child_ids[i]+'">\
+                                    <p class="himgp mc"><img src="'+this._gloConfig.xijqwResUrl+'/avatar/'+child_ids[i]+'"></p>\
+                                    <p class="name">'+ $.getNameById(child_ids[i], this._locStorage) +'</p>\
+                                </div>');
+                            }
+                            studentlist.append(clas.join(""));
+                        }else{
+                            studentlist.html('<img class="lp50 tp50 pta" style="width:100px; margin:-37px 0 0 -50px; z-index:1;" src="http://7xix4h.com1.z0.glb.clouddn.com/images/empty.png">');
+                        }
+                        for(var j= 0, l=teacher_ids.length; j<l; j++){
+                            var ph = $.getPhoneById(teacher_ids[j], this._locStorage);
+                            teach.push('<div class="ls swipedel bgceee ptr" data-eq="'+i+'" data-uid="'+teacher_ids[j]+'"><div class="ptr p10 box">\
+                                <p class="himgt dsilb vam mr10"><a href="javascript:;" data-shape="square"><img src="'+this._gloConfig.xijqwResUrl+'/avatar/'+teacher_ids[j]+'"></a></p>\
+                                <p class="name dsilb">'+ $.getNameById(teacher_ids[j], this._locStorage)+'</p>\
+                                <div class="gs dsilb fr mt5">\
+                                    <a class="'+(ph?'cd':'cd c66')+' g phone bdrp50 dsilb ml10 alic" href="'+(ph?'tel:'+ph:'javascript:;')+'"><i class="fa fa-phone lh28"></i></a>\
+                                    <a class="cd c66 g sms bdrp50 dsilb ml10 alic" href="javascript:;" data-uid="'+teacher_ids[j]+'" data-type="sms"><i class="fa fa-envelope-o lh28"></i></a>\
+                                    <a class="cd c66 g weixin bdrp50 dsilb ml10 alic" href="javascript:;" data-uid="'+teacher_ids[j]+'" data-type="weixin"><i class="fa fa-weixin lh28"></i></a>\
+                                </div>\
+                                <a href="javascript:;" data-uid="'+teacher_ids[j]+'" class="delete fa pta lp100 alic"><i class="fa fa-trash-o fs24 cff"></i></a>\
+                        </div></div>');
+                        }
+                        $('.teacherlist').append(teach.join(""));
+                        $('.swipedel').swipedel();
+                    },
+                    bindEvent:function(){
+                        var _this = this;
+                        var showstmess = $('#showstmess');
+                        //
+                        $("body").on('click', ".btbtn", function(){
+                            var eq = $(this).data('eq');
+                            var studentlist = $('.studentlist');
+                            var teacherlist = $('.teacherlist');
+                            $(this).addClass('active').siblings().removeClass('active');
+                            if(eq==0){
+                                studentlist.show();
+                                teacherlist.hide();
+                            }else{
+                                studentlist.hide();
+                                teacherlist.show();
+                            }
+                        });
+                        //
+                        $('body').on('click','.tls',function(){
+                            var $this = $(this);
+                            //var eq = $(this).data('eq');
+                            var str = _this._initstr($this.data("uid"));
+                            showstmess.html(str);
+                            showstmess.show();
+                        }).on('click','.g.sms, .g.weixin',function(){
+                            // var $this = $(this);
+                            // var uid = $this.attr('data-uid');
+                            // var type=$this.attr('data-type');
+                            // var msg = prompt("请输入你要发送的内容");
+                            // if(msg==null){
+                            //     return false;
+                            // }
+                            // if(msg.replace(/\s/ig,'').length==0){
+                            //     $.tipshow({"msg":"请输入你要发送的内容","type":"waring"});
+                            //     return false;
+                            // }else{
+                            //     $.tipshow({"msg":"发送成功","type":"success","ico":"check"});
+                            // }
+                        }).on('click','.delete',function(){
+                            var $this = $(this);
+                            $.sendAjax({
+                                scope: _this,
+                                type: "GET",
+                                url: _this._gloConfig.urlPrefix+"/crm/teachers/del/teachers/"+$this.data("uid"),
+                                dataType: 'json',
+                                contentType: "application/json",
+                                success: function(res, textStatus, jqXHR, localStorage) {
+                                    //更新localstorage最新状态
+                                    _this._locStorage = localStorage;
+                                    //获取状态码
+                                    if(res.code !== 0){
+                                        return false;
+                                    }
+                                    $.tipshow({"msg":"删除成功","type":"success","ico":"check","callback":function(){
+                                        $this.parent().remove();
+                                    }});
+                                }
+                            });
+                        });
+                        showstmess.on('click','.cal',function(){
+                            showstmess.hide();
+                        }).on('click','.del',function(){
+                            var $this = $(this);
+                            $.sendAjax({
+                                scope: _this,
+                                type: "GET",
+                                url: _this._gloConfig.urlPrefix+"/crm/teachers/del/childs/"+$this.data("uid"),
+                                dataType: 'json',
+                                contentType: "application/json",
+                                success: function(res, textStatus, jqXHR, localStorage) {
+                                    //更新localstorage最新状态
+                                    _this._locStorage = localStorage;
+                                    //获取状态码
+                                    if(res.code !== 0){
+                                        return false;
+                                    }
+                                    $.tipshow({"msg":"删除成功","type":"success","ico":"check","callback":function(){
+                                        showstmess.hide();
+                                        $('.tls[data-uid="'+$this.data('uid')+'"]').remove();
+                                    }});
+                                }
+                            });
+                        })
+                    },
+                    init: function(){
+                        this.initPage();
+                        this.renderData();
+                        this.bindEvent();
+                    }
+                };
+            })();
+            $(function(){
+                tMaillistPage.init();
+            });
+        })(jQuery, window, document);
+    </script>
+</body>
+</html>

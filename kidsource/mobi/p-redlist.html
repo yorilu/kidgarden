@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/datepicker.css" rel="stylesheet" type="text/css" />
+	<title>红花榜</title>
+    <style type="text/css">
+        .nls{ width: 60px; padding-left:7px; padding-right:7px;}
+        #rili td{ position: relative;}
+        #rili .flower{ position: absolute; left: 3px; bottom: 3px; width: 15px;}
+    </style>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=5"></script>
+</head>
+<body>
+	<section class="html p-redlist">
+        <section class="select">
+		    <section class=" plist"></section>
+            <div id="J_modLoad" class="mod-load alic ptb c66"><img class="mr10" src="http://7xix4h.com1.z0.glb.clouddn.com/images/loading.gif">加载中……</div>
+        </section>
+        <section class="select phistory hide p10">
+			<div class="rili" id="rili"></div>
+			<p class="total fs12 pt10" id="total"></p>
+		</section>
+	</section>
+    <script type="text/javascript" src="assets/min/js/datepicker.js"></script>
+    <script type="text/javascript" src="assets/min/js/extend.js?v=1"></script>
+    <script type="text/javascript">
+        ;(function ($, window, document, undefined) {
+            var pRedlistPage = (function () {
+                return {
+                    _locStorage: window.currLocStorage || {},
+                    _gloConfig: window.globalConfig,
+                    _isloading: false,
+                    _isover: false,
+                    _currpage: 1,
+                    _pageSize: 10,
+                    _getoutres: function (t){
+                        var $t = $(t);
+                        $('.res').html('')
+                        if($t.parent().data('is')==1){
+                            $('.res').html($t.parent().data('res'))
+                        }
+                    },
+                    _getdate: function(timestr){
+                        return new Date(timestr)
+                    },
+                    _goajax: function (timestr, childid){
+                        var _this = this;
+                        var tds = $('#rili a[data-year]');
+                        $.sendAjax({
+                            scope: _this,
+                            type: "GET",
+                            url: _this._gloConfig.urlPrefix+'/crm/class/flower/child_history/'+timestr,
+                            dataType: 'json',
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                if(res.code !== 0){
+                                    return false;
+                                }
+                                var data = res.data, len=data.length, total = $('#total');
+                                if(len){
+                                    for(var i=0; i<len; i++){
+                                        var date = (data[i]&& data[i].split(" ") || "")[0].split("-");
+                                        $('#rili a[data-date="'+((+date[2]) || "")+'"]').append('<img class="flower" src="http://7xix4h.com1.z0.glb.clouddn.com/images/flower.png">');
+                                    }
+                                    total.html('本月共获得 <span class="cf0">'+res.data.length+'</span> 枚花')
+                                }else{
+                                    total.html('本月没有获得花')
+                                }
+                            }
+                        })
+                        
+                    },
+                    _showbb: function (ls,uid){
+                        var str = '',arr=[];
+                        for(var k in ls){
+                            arr = arr.concat(ls[k]);
+                        }
+                        for(var i=0;i<arr.length;i++){
+                            var me = arr[i]==uid ? 'c' : '';
+                            str+='<div class="nls dsilb alic pb10 vat" data-uid="'+arr[i]+'"><a class="c66" href="javascript:;"><p class="img bdrp50 ovh"><span data-shape="square"><img src="'+this._gloConfig.xijqwResUrl+'/avatar/'+arr[i]+'"></span></p><p class="name fs12 lh20 ellipsis '+me+'">'+$.getNameById(arr[i],this._locStorage)+'</p></a></div>';
+                        }
+                        return str;
+                    },
+                    initPage: function(){
+                        //初始化底部菜单
+                        $.gentoolbar({
+                            pageId: "p-redlist",
+                            mainToolBarTemp: this._gloConfig.mainParToolBarTpml,
+                            localToolBarTemp:
+                                '<a href="javascript:;" data-eq="0" class="botbtn btn fl c66 dsb alic wp50 active">今日红花</a>' +
+                                '<a href="javascript:;" data-eq="1" class="botbtn btn fl bd-l c66 dsb alic wp50">宝贝红花</a>'
+                        });
+                    },
+                    renderData: function(page, _modload){
+                        var _this = this;
+                        $.sendAjax({
+							scope: _this,
+                            type: "GET",
+                            url: _this._gloConfig.urlPrefix+'/crm/class/flowers/history/'+_this._pageSize+'/'+page,
+                            dataType: 'json',
+                            beforeSend: function(){
+                                if(_this._isloading) return false;
+                                _this._isloading = true;
+                                _modload.show();
+                            },
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                if(res.code !== 0){
+                                    return false;
+                                }
+                                if(_this._isover) {
+                                    return false;
+                                }
+                                var str = '', data = res.data, len = data.length, plist = $('.plist');
+                                if(page === 1 && len === 0){
+                                    _modload.hide();
+                                    plist.html('<img class="lp50 tp50 pta" style="width:100px; margin:-37px 0 0 -50px; z-index:1;" src="http://7xix4h.com1.z0.glb.clouddn.com/images/empty.png">');
+                                    _this._isover = true;
+                                    return false;
+                                }
+                                for(var k in data){
+                                    var childid = $.getChildInfoByParentId($.getCurrUserId(_this._locStorage),_this._locStorage)['_id'] ||"";
+                                    str += '<div class="item bgcfff mt1 plr pt5">'+
+                                        '<div class="t fwb alil">'+( $.formatDate(data[k]["date"], "yyyy-MM-dd")||"")+'</div>'+
+                                        '<div class="b">'+_this._showbb(data[k]['flowers'], childid)+'</div>'+
+                                    '</div>';
+                                }
+                                plist.append(str);
+                                if(len < _this._pageSize){
+                                    _modload.show().html('已加载全部数据');
+                                    _this._isover = true;
+                                }
+                                _this._isloading = false;
+                                //触发lazyload
+                                $(window).trigger("scroll");
+                            },
+                            error: function(){
+                                if(page > 1){
+                                    _this._currpage = _this._currpage - 1;
+                                }
+                                _this._isloading = false;
+                            }
+                        })
+                    },
+                    initDatepicker: function(){
+                        var _this = this,date = new Date(),y = date.getFullYear(),m = date.getMonth()+1,d = date.getDate();
+                        var childid = $.getChildInfoByParentId($.getCurrUserId(_this._locStorage),_this._locStorage)['_id'] ||"";
+                        var rilia = new DatePicker({
+                            "target":"#rili",
+                            "showtype":"indiv",
+                            "timeformat":"y-m-d",
+                            "timegroup":"y-m-d",
+                            "defaultdate":y+'-'+m+'-'+d,
+                            "monthchange":function(y,m){
+                                _this._goajax(y+"-"+m, childid);
+                            }
+                        });
+                    },
+                    bindEvent:function(_modload){
+                        var _this = this;
+                        var date = new Date();
+                        var y = date.getFullYear();
+                        var m = date.getMonth()+1;
+                        var d = date.getDate();
+                        var doc = $(document);
+                        var winh = window.innerHeight;
+                        var childid = $.getChildInfoByParentId($.getCurrUserId(_this._locStorage),_this._locStorage)['_id'] ||"";
+                        var setTimer = null;
+                        this._goajax(y+'-'+m,childid);
+                        $("body").on("click", ".botbtn",function(){
+                            var $this = $(this);
+                            var eq =$this.data('eq');
+                            $this.addClass('active').siblings().removeClass('active');
+                            $('.select').eq(eq).removeClass('hide').siblings('.select').addClass('hide');
+                        });
+                        //动态加载
+                        document.addEventListener("touchmove", function(e){
+                            clearTimeout(setTimer);
+                            setTimer = setTimeout(function() {
+                                var top = doc.scrollTop(),
+                                    doch = doc.height();
+                                if ((top + winh) > (doch - (_this._gloConfig.loadFireHeight || 200))) {
+                                    if (_this._isover || _this._isloading) {
+                                        return false;
+                                    }
+                                    _this.renderData(++(_this._currpage), _modload);
+                                }
+                            }, 100);
+                        }, false);
+                    },
+                    init: function(){
+                        var modload = $("#J_modLoad");
+                        this.initDatepicker();
+                        //
+                        this.initPage();
+                        this.renderData(this._currpage, modload);
+                        this.bindEvent(modload);
+                    }
+                };
+            })();
+            $(function(){
+                pRedlistPage.init();
+            });
+        })(jQuery, window, document);
+    </script>
+</body>
+</html>

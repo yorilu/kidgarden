@@ -1,0 +1,18 @@
+{
+    "code": 0,
+    "msg": "ok",
+    "data": {
+            "id": 1,
+            "name": "李娜老师",
+            "sex": "女",
+            "borthday": "1988-10-08",
+            "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/teadefault.jpg",
+            "phone":"15823256523",
+            "role":"主班",
+            "class":"大二班",
+            "school":"阳光幼儿园（浦江镇）",
+            "temperature":"24 ~ 14℃",
+            "cloud":"多云转晴",
+            "updatetime":"2015/4/24 08:22"
+    }
+}

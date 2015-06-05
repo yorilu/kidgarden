@@ -1,0 +1,28 @@
+{
+    "code": 0,
+    "msg": "ok",
+    "data": {
+        "to":"天天妈妈",
+        "toid":20,
+        "fromid":10,
+        "toheadimg":"http://7ximo5.com1.z0.glb.clouddn.com/head14.jpg",
+        "fromheadimg":"http://7ximo5.com1.z0.glb.clouddn.com/tea01.jpg",
+        "msgs":[
+            {  
+                "type":"to",
+                "time":"2015-03-25 12:12",
+                "msg":"我问了，不会很多"
+            },
+            {
+                "type":"from",
+                "time":"2015-03-25 12:12",
+                "msg":"我也有这个疑问，现在知道了"
+            },
+            {
+                "type":"to",
+                "time":"2015-03-25 12:12",
+                "msg":"不要太多就可以了"
+            }
+        ]
+    }
+}

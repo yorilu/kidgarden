@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/part/tmessageshow.css" rel="stylesheet" type="text/css" />
+	<title>消息详情</title>
+    <script type="text/javascript">
+        window.jsApiLists = [
+            "previewImage"
+        ];
+    </script>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=5"></script>
+</head>
+<body>
+	<section class="html t-messageshow">
+		<div class="msgmess plr pt10">
+            <div class="top ptr p10 pl60 bgcfff ovh">
+                <p class="himgt pta l10 t10"><img src="http://7xix4h.com1.z0.glb.clouddn.com/images/head.jpg"></p>
+                <p class="title pb5 ptr fwb ellipsis cd"></p>
+                <p class="name fl fs12"></p>
+                <p class="time fr fs12"></p>
+            </div>
+            <div class="msg p10 bgcfff mt1"></div>
+        </div>
+        <div id="J_classimgs" class="p10 hide ovh" style="padding-top: 0px;"></div>
+        <div class="votes ovh p10 bgcfff m10 fs12 hide">
+            <div class="t bgcf0f0f0 alic fs12">投票情况<span class="y ml5 c99"></span><a href="javascript:;" class="more dsn">详细</a></div>
+            <div class="vs">
+            </div>
+        </div>
+        <div class="sum bd-t alir mlr">
+            <a href="javascript:;" class="back cd dsb fr bd-l fs12 plr"><i class="fa fa-comment-o"></i>回复<span>0</span></a>
+            <a href="javascript:;" class="see cd dsb fr bd-l fs12 plr"><i class="fa fa-eye"></i>浏览<span>0</span></a>
+        </div>
+        <div class="summess bgcfff mlr ovh pt5 pb5 dsn"></div>
+        <div class="hr ptr pt10 pb10 mt10 lh24 ptr lh24 ovh fs12"><p class="fl lh24 bgcf6f6f6 ptr z2 plr">回复列表(<span>0</span>)条</p><a href="javascript:;" class="meback cd fr dsb lh24 bgcf6f6f6 ptr z2  plr">我要留言</a></div>
+        <div class="rinpa ptr pr50 0 dsn bdr5"><input type="text" class="control text"><input type="button" value="回复" class="control submit pta r0 bgcddd c33 tind0" data-id="0"></div>
+        <div class="replays plr pb40"></div>
+	</section>
+    <script type="text/javascript" src="assets/min/js/extend.js"></script>
+    <script type="text/javascript">
+        ;(function ($, window, document, undefined) {
+            var pMessageShowPage = (function () {
+                return {
+                    _locStorage: window.currLocStorage || {},
+                    _gloConfig: window.globalConfig,
+                    _replayitem: function (ls){
+                        var _this = this, str = '';
+                        for(var i=0;i<ls.length;i++){
+                            if(ls[i]['role']===1){
+                                str+='<div class="item bd-t ptb">\
+                                    <div class="replay ptr ovh">\
+                                        <div class="text lh24 pb10 fs12">\
+                                            <img class="himgtsml vam mr5 fl" src="'+_this._gloConfig.xijqwResUrl+'/avatar/'+ls[i]['_id']+'">\
+                                            <p class="ovh">\
+                                                <span class="peo fwb fl">'+$.getNameById(ls[i]['_id'],_this._locStorage)+'</span>\
+                                                <span class="fr">'+$.formatDate((ls[i].ts||0)*1000, "yyyy-MM-dd hh:mm")+'</span>\
+                                            </p>\
+                                        </div>\
+                                        <div class="fs12 c33">'+ls[i].content+'</div>\
+                                    </div>\
+                                </div>';
+                            }else{
+                                str+='<div class="item bd-t ptb">\
+                                    <div class="replay ptr ovh">\
+                                        <div class="text lh24 pb10 fs12">\
+                                            <img class="himgpsml vam ml5 fr" src="'+_this._gloConfig.xijqwResUrl+'/avatar/'+$.getChildIdByParentId($.getCurrUserId(_this._locStorage), _this._locStorage)+'">\
+                                            <p class="ovh">\
+                                                <span class="peo fwb fr">'+$.getChildNameByParentId(ls[i]['_id'],_this._locStorage)+$.getRelationByParentId(ls[i]['_id'],_this._locStorage)+'</span>\
+                                                <span class="fl">'+$.formatDate((ls[i].ts || 0)*1000, "yyyy-MM-dd hh:mm")+'</span>\
+                                            </p>\
+                                        </div>\
+                                        <div class="fs12 c33 alir">'+ls[i].content+'</div>\
+                                    </div>\
+                                </div>';
+                            }
+                        }
+                        return str;
+                    },
+                    _backreplay: function (ls){
+                        var str = '';
+                        for(var i=0;i<ls.length;i++){
+                            str+='<div class="answer">\
+                                <span class="fwb">'+ls[i].name+ls[i].role+'</span>：'+ls[i].msg+'\
+                            </div>';
+                        }
+                        if(ls.length>0){
+                            return '<div class="answers bgce0e0e0 bdr5 mt5 ptr p10 pt5 pb5">'+str+'</div>';
+                        }else{
+                            return '';
+                        }
+                    },
+                    _setvote: function (vt, uid ,mid){
+                        if(!vt || !vt.items.length){
+                            return false;
+                        }
+                        var str ='',
+                            vtls = vt.items,
+                            vtps = vt.poll || [],
+                            votes = $('.votes'),
+                            vtotle,
+                            varr = [];
+                        //已经投票的所有user_id
+                        for(var k in vtps){
+                            varr = varr.concat(vtps[k]);
+                        }
+                        vtotle = varr.length ? varr.length : 0.001;
+                        //投票传值从0开始，第一次选第一个时会造成后端bug，前端调成1开始
+                        for(var i= 0, j= 1, len=vtls.length; i<len; i++){
+                            var plen = vtps[j] ?  vtps[j].length : 0;
+                            str+='<div class="ls pt5 pb5 ovh">\
+                                <label class="radio wp100 fs12"><input type="radio" name="v" value="'+j+'"><span></span>'+vtls[i]+'</label>\
+                                <p class="pre bgcf0f0f0 bdr3 ptr alil" data-v="'+plen+'">\
+                                    <span class="rol bgcmin dsb bdr3 pta" style="width:'+(plen*100/vtotle)+'%;"></span>\
+                                    <span class="tic cff fs12 z1 ptr">'+plen+'票</span>\
+                                    <span class="p pta fs12">'+ Math.round(plen*100/vtotle)+'%</span>\
+                                </p>\
+                            </div>';
+                            j++;
+                        }
+                        //
+                        votes.removeClass('hide').find('.vs').attr('data-total',vtotle).html(str);
+                        //是否可以再投票
+                        if(varr.indexOf(uid) === -1){
+                            votes.append('<a href="javascript:;" data-mid="'+mid+'" class="ivote bgc dsb wp50 alic bdr5 cff fs12">我来投票</a>');
+                        }else{
+                            votes.find('.y').append('您已投票');
+                        }
+                    },
+                    _summess: function (elem, ls){
+                        var str = '', _this = this;
+                        for(var k in ls){
+                            str+='<p class="fl wp25 fs12 lh24 alic">'+$.getChildNameByParentId(k,_this._locStorage)+'</p>';
+                        }
+                        elem.html(str);
+                    },
+                    _gopre: function (val){
+                        var $vt = $('.vs'), tal = parseInt($vt.data('total'))+1, ls = $vt.find('.pre');
+                        $.each(ls, function(i, n){
+                            var $this = $(this), v=parseInt($this.data('v'));
+                            if((i+1) == val){
+                                $this.find('.rol').animate({'width':parseInt($this.css('width'))*(v+1)/tal});
+                                $this.find('.tic').html((v+1)+'票');
+                                $this.find('.p').html(Math.round(((v+1)/tal)*100)+'%');
+                            }else{
+                                $this.find('.rol').animate({'width':parseInt($this.css('width'))*v/tal});
+                                $this.find('.tic').html(v+'票');
+                                $this.find('.p').html(Math.round((v/tal)*100)+'%');
+                            }
+                        });
+                    },
+                    _showImgs:function(imgs){
+                        var cont = [];
+                        for(var i= 0, len=imgs.length; i<len; i++){
+                            cont.push('<p class="img-item wp33 fl ovh" style="padding: 0px 3px 3px 0px;"><img data-ingkey="'+imgs[i]+'" src="'+this._gloConfig.xijqwResUrl+'/'+imgs[i]+'-s" /></p>');
+                        }
+                        $("#J_classimgs").html(cont.join("")).attr("data-imgkeys", JSON.stringify(imgs).replace(/"/g, "'")).show();
+                    },
+                    initPage: function(){
+                        //初始化底部菜单
+                        $.gentoolbar({
+                            pageId: "p-message",
+                            mainToolBarTemp: this._gloConfig.mainParToolBarTpml
+                        });
+                    },
+                    renderData: function(summess){
+                        var _this = this;
+                        var user_id = $.getCurrUserId(_this._locStorage);
+                        var cs = $.getRequest(),
+                            _this = this;
+                        $.sendAjax({
+							scope: _this,
+                            type: "GET",
+                            url: _this._gloConfig.urlPrefix+'/crm/class/msg_down/info/'+cs.mid,                            
+                            dataType: 'json',
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                //获取状态码
+                                if(res.code !== 0){
+                                    return false;
+                                };
+                                var data = res.data, topmess= $('.msgmess');
+                                topmess.find('.himgt img').attr('src',_this._gloConfig.xijqwResUrl+'/avatar/'+data.teacher_id+'');
+                                topmess.find('.name').html($.getNameById(data.teacher_id,_this._locStorage));
+                                topmess.find('.time').html('发布于:'+$.formatDate((data.ts || 0)*1000, "yyyy-MM-dd hh:mm"));
+                                topmess.find('.title').html(data.title);
+                                topmess.find('.msg').html(data.content);
+                                $('.replays').append(_this._replayitem((data.chats || [])));
+                                $('.hr span,.back span').html(data.chat_count);
+                                $('.see span').html(data.reader_count)
+                                _this._setvote(data.vote, user_id, cs.mid);
+                                _this._summess(summess, data.readers);
+                                //图片预览
+                                if(data["pics"].length){
+                                    _this._showImgs(data["pics"]);
+                                }
+                            }
+                        });
+                    },
+                    bindEvent:function(summess){
+                        var _this = this;
+                        var cs = $.getRequest();
+                        var sending = false;
+                        //图片预览
+                        var cimgs = $("#J_classimgs");
+                        cimgs.on("click", "img", function(event){
+                            var srcs = (JSON.parse(cimgs.data("imgkeys").replace(/'/g, '"')) || []).map(function(item, index, array){
+                                return _this._gloConfig.xijqwResUrl+'/'+item+'-m';
+                            });
+                            var currimg = _this._gloConfig.xijqwResUrl+'/'+$(this).data("ingkey")+'-m';
+                            wx.previewImage({
+                                current: currimg, // 当前显示的图片链接
+                                urls: srcs // 需要预览的图片链接列表
+                            });
+                        });
+                        //
+                        $('body').on('click','.replayback',function(){
+                            $(this).closest('.replay').next().slideToggle();
+                        }).on('click','.meback',function(){
+                            $(this).parent().next().slideToggle();
+                        }).on('click','.back',function(){
+                            $('.meback').click();
+                        }).on('click','.rinpa .submit',function(){
+                            //回复
+                            var $this = $(this);
+                            var $par = $this.parent();
+                            var $box = $par.next();
+                            var text = $.trim($this.prev().val());
+                            if(text.length==0){
+                                $.tipshow({'msg':"请输入内容",'type':'waring'});
+                                return false;
+                            }
+                            $.tipshowopen({'msg':'正在提交···'});
+                            $.sendAjax({
+								scope: _this,
+                                type: "POST",
+                                url: _this._gloConfig.urlPrefix+'/crm/class/msg_down/chat/'+cs.mid,
+                                dataType: 'json',
+                                data: JSON.stringify({'data':{'content':text}}),
+                                beforeSend: function(){
+                                    if(sending){
+                                        //发送中直接返回false，不继续发送
+                                        return false;
+                                    }
+                                    sending = true;
+                                },
+                                success: function(res, textStatus, jqXHR, localStorage) {
+                                    //更新localstorage最新状态
+                                    _this._locStorage = localStorage;
+                                    //获取状态码
+                                    if(res.code !== 0){
+                                        return false;
+                                    };
+                                    var str = '<div class="item bd-t ptb">\
+                                        <div class="replay ptr ovh">\
+                                            <div class="text lh24 pb10 fs12">\
+                                                <img class="himgpsml vam ml5 fr" src="'+_this._gloConfig.xijqwResUrl+'/avatar/'+_this._locStorage['curr']['_id']+'">\
+                                                <p class="ovh">\
+                                                    <span class="peo fwb fr">'+$.getChildNameByParentId(_this._locStorage['curr']['_id'],_this._locStorage)+$.getRelationByParentId(_this._locStorage['curr']['_id'],_this._locStorage)+'</span>\
+                                                    <span class="fl">'+$.formatDate((res.ts||0)*1000, "yyyy-MM-dd hh:mm")+'</span>\
+                                                </p>\
+                                            </div>\
+                                            <div class="fs12 c33 alir">'+text+'</div>\
+                                        </div>\
+                                    </div>';
+
+                                    $this.prev().val("");
+                                    $.tipshowclose({'msg':'回复成功','callback':function(){
+                                        $box.append(str);
+                                        $par.slideToggle();
+                                    }});
+                                    sending = false;
+                                },
+                                error: function(){
+                                    sending = false;
+                                }
+                            })
+                        }).on('click','.enroll .more',function(){
+                            $(this).parent().next().slideToggle();
+                        }).on('click','.ivote',function(){
+                            //投票
+                            var $this = $(this);
+                            var mid = $this.data('mid');
+                            var $box = $this.prev();
+                            var val;
+                            if($('input[name="v"]:checked').length==0){
+                                $.tipshow({'msg':"请选择选项",'type':'waring'});
+                                return false;
+                            }
+                            val = parseInt($('input[name="v"]:checked').val());
+                            $.sendAjax({
+                                scope: _this,
+                                type: "GET",
+                                url: _this._gloConfig.urlPrefix+'/crm/class/msg_down/vote/'+cs.mid+'/'+val,
+                                dataType: 'json',
+                                beforeSend: function(){
+                                    if(sending){
+                                        //发送中直接返回false，不继续发送,防止频繁操作
+                                        return false;
+                                    }
+                                    sending = true;
+                                },
+                                success: function(res, textStatus, jqXHR, localStorage) {
+                                     //更新localstorage最新状态
+                                    _this._locStorage = localStorage;
+                                     //获取状态码
+                                    if(res.code !== 0){
+                                         return false;
+                                    };
+                                    setTimeout(function(){
+                                        $.tipshow({'msg':'投票成功','callback':function(){
+                                            _this._gopre(val);
+                                            $('.votes .y').append('您已投票');
+                                            $this.remove();
+                                        }});
+                                    }, 800);
+                                },
+                                complete: function(){
+                                    sending = false;
+                                }
+                            })
+                        }).on('click','.see',function(){
+                            var $this = $(this);
+                            if($this.hasClass('active')){
+                                $this.removeClass('active');
+                                summess.slideUp(300);
+                            }else{
+                                $this.addClass('active');
+                                summess.slideDown(300);
+                            }
+                        });
+                    },
+                    init: function(){
+                        var summess = $('.summess');
+                        this.initPage();
+                        this.renderData(summess);
+                        this.bindEvent(summess);
+                    }
+                };
+            })();
+            $(function(){
+                pMessageShowPage.init();
+            });
+        })(jQuery, window, document);
+    </script>
+</body>
+</html>

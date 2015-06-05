@@ -1,0 +1,26 @@
+@charset "utf-8";
+/* CSS Document */
+.enroll .iin{margin: 10px auto 0; height: 30px; line-height: 28px;}
+.votes .pre{ margin:3px 30px 0 0; height: 20px;}
+.votes .p{ right: -30px; left: auto;}
+.rol{height: 20px;}
+.votes .ivote{margin: 10px auto 0; height: 30px; line-height: 28px;}
+.sum{ height: 36px; background: #fafafa;}
+.sum a{line-height: 35px;}
+.sum a i{ margin-right: 5px;}
+.sum a.active{  background: #fff;}
+.hr:after{ content: ""; display: block; position: absolute; left: 0; top: 50%; width: 100%; border-bottom: 1px solid #ddd;}
+.answers:before{  position: absolute; right: 8px; top: -7px;  content: ""; display: block; border-width: 0 7px 7px 7px; border-style: solid; border-color: transparent transparent #e0e0e0 transparent;}
+.answer{padding: 3px 0; font-size: 12px;}
+.replays .item:nth-child(1){ border:none;}
+.rinp{ height: 40px; }
+.rinp .submit{ width: 50px;}
+.rinpa{ height: 42px; border:1px solid #ddd; margin: 0 10px;}
+.rinpa .submit{ width: 50px; } 
+label.radio{ display: inline-block; margin-right: 20px; padding: 0 0 0 23px; overflow: hidden; position: relative;vertical-align:middle;}
+label.radio input{ position: absolute; left: -999px; top: -999px;}
+label.radio input+span{ display: block; height: 20px; width: 20px; border:2px solid #ccc; border-radius: 50%; position: absolute; left: 0; top: 50%; margin-top: -10px;}
+label.radio input:checked+span{ background: #09bb07; border:2px solid #09bb07;}
+label.radio input[disabled]+span{ border:2px solid #aaa;}
+.tabselect{ overflow: hidden; padding: 4px 0 4px 0; height: 40px;}
+.tabselect p{ display: inline-block; line-height: 32px;}

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/part/tmessageshow.css" rel="stylesheet" type="text/css" />
+	<title>消息详情</title>
+    <script type="text/javascript">
+        window.jsApiLists = [
+            "previewImage"
+        ];
+    </script>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=6"></script>
+</head>
+<body>
+	<section class="html t-messageshow">
+		<div class="msgmess p10">
+			<div class="top ptr p10 pl60 bgcfff ovh">
+				<p class="himgt pta l10 t10"><img src="http://7xix4h.com1.z0.glb.clouddn.com/images/head.jpg"></p>
+				<p class="title pb5 ptr fwb ellipsis cd"></p>
+				<p class="name fl fs12"></p>
+				<p class="time fr fs12"></p>
+			</div>
+			<div class="msg p10 bgcfff mt1 ovh"></div>
+		</div>
+        <div id="J_classimgs" class="p10 hide ovh" style="padding-top: 0px;"></div>
+		<div class="votes ovh p10 bgcfff mlr mb10 fs12 hide">
+			<div class="t bgcf0f0f0 alic fs12">投票情况<a href="javascript:;" class="more dsn">详细</a></div>
+			<div class="vs">
+			</div>
+		</div>
+		<div class="sum bd-t alir mlr">
+			<a href="javascript:;" class="back cd dsb fr bd-l fs12 plr"><i class="fa fa-comment-o"></i>回复<span>0</span></a>
+			<a href="javascript:;" class="see cd dsb fr bd-l fs12 plr"><i class="fa fa-eye"></i>浏览<span>0</span></a>
+		</div>
+		<div class="summess bgcfff mlr ovh pt5 pb5 dsn"></div>
+		<div class="hr ptr pt10 pb10 mt10 lh24 ptr lh24 ovh fs12"><p class="fl lh24 bgcf6f6f6 ptr z2 plr">回复列表(<span>0</span>)条</p><a href="javascript:;" class="meback cd fr dsb lh24 bgcf6f6f6 ptr z2  plr">我要留言</a></div>
+		<div class="rinpa ptr pr50 0 dsn bdr5"><input type="text" class="control text"><input type="button" value="回复" class="control submit pta r0 bgcddd c33 tind0" data-id="0"></div>
+		<div class="replays plr pb40"> </div>
+	</section>
+    <script type="text/javascript" src="assets/min/js/extend.js"></script>
+    <script type="text/javascript">
+        ;(function ($, window, document, undefined) {
+            var tMessageShowPage = (function () {
+                return {
+                    _locStorage: window.currLocStorage || {},
+                    _gloConfig: window.globalConfig,
+                    _replayitem: function (ls){
+                        var _this = this, str = '', len=ls.length;
+                        for(var i=0; i<len; i++){
+                            if(ls[i]['role']===1){
+                                str+='<div class="item bd-t ptb">\
+                                    <div class="replay ptr ovh">\
+                                        <div class="text lh24 pb10 fs12">\
+                                            <img class="himgtsml vam mr5 fl" src="'+_this._gloConfig.xijqwResUrl+'/avatar/'+ls[i]['_id']+'">\
+                                            <p class="ovh">\
+                                                <span class="peo fwb fl">'+$.getNameById(ls[i]['_id'],_this._locStorage)+'</span>\
+                                                <span class="fr">'+$.formatDate((ls[i].ts||0)*1000, "yyyy-MM-dd hh:mm")+'</span>\
+                                            </p>\
+                                        </div>\
+                                        <div class="fs12 c33">'+(ls[i]["content"] || '')+'</div>\
+                                    </div>\
+                                </div>';
+                            }else{
+                                str+='<div class="item bd-t ptb">\
+                                    <div class="replay ptr ovh">\
+                                        <div class="text lh24 pb10 fs12">\
+                                            <img class="himgpsml vam ml5 fr" src="'+_this._gloConfig.xijqwResUrl+'/avatar/'+ $.getChildIdByParentId(ls[i]['_id'],_this._locStorage)+'">\
+                                            <p class="ovh">\
+                                                <span class="peo fwb fr">'+$.getChildNameByParentId(ls[i]['_id'],_this._locStorage)+$.getRelationByParentId(ls[i]['_id'],_this._locStorage)+'</span>\
+                                                <span class="fl">'+$.formatDate((ls[i].ts||0), "yyyy-MM-dd hh:mm")+'</span>\
+                                            </p>\
+                                        </div>\
+                                        <div class="fs12 c33 alir">'+(ls[i]["content"] || '')+'</div>\
+                                    </div>\
+                                </div>';
+                            }
+                        }
+                        return str;
+                    },
+                    _setvote: function (vt){
+                        if(!vt){
+                            return false;
+                        }
+                        $('.votes').removeClass('hide');
+                        var str ='', vtls = vt.items, vtps = vt.poll ||[], votes = $('.votes'), vtotle, varr=[];
+                        for(var k in vtps){
+                            varr = varr.concat(vtps[k]);
+                        }
+                        vtotle = varr.length || 0.001;
+                        for(var i= 0, j= 1, len=vtls.length; i<len; i++){
+                            var plen = vtps[j]? vtps[j].length: 0;
+                            str += '<div class="ls pt5 pb5 ovh">\
+                                <label class="radio wp100 fs12"><input type="radio" disabled name="v" value="'+i+'"><span></span>'+vtls[i]+'</label>\
+                                <p class="pre bgcf0f0f0 bdr3 ptr alil" data-v="'+plen+'">\
+                                    <span class="rol bgcmin dsb bdr3 pta" style="width:'+(plen*100/vtotle)+'%;"></span>\
+                                    <span class="tic cff fs12 z1 ptr">'+plen+'票</span>\
+                                    <span class="p pta fs12">'+Math.round(plen*100/vtotle)+'%</span>\
+                                </p>\
+                            </div>';
+                            j++;
+                        }
+                        $('.votes .vs').html(str);
+                    },
+                    _summess: function (elem,ls){
+                        var str = '', _this = this;
+                        for(var k in ls){
+                            var name = $.getChildNameByParentId(k,_this._locStorage)+$.getRelationByParentId(k,_this._locStorage);
+                            str+='<p class="fl wp25 fs12 lh24 alic">'+name+'</p>';
+                        }
+                        elem.html(str);
+                    },
+                    _showImgs:function(imgs){
+                        var cont = [];
+                        for(var i= 0, len=imgs.length; i<len; i++){
+                            cont.push('<p class="img-item wp33 fl ovh" style="padding: 0px 3px 3px 0px;"><img data-ingkey="'+imgs[i]+'" src="'+this._gloConfig.xijqwResUrl+'/'+imgs[i]+'-s" /></p>');
+                        }
+                        $("#J_classimgs").html(cont.join("")).attr("data-imgkeys", JSON.stringify(imgs).replace(/"/g, "'")).show();
+                    },
+                    initPage: function(){
+                        //初始化底部菜单
+                        $.gentoolbar({
+                            pageId: "t-message",
+                            mainToolBarTemp: this._gloConfig.mainTeaToolBarTpml
+                        });
+                    },
+                    renderData: function(summess){
+                        var _this= this,
+                            cs = $.getRequest();
+                        $.sendAjax({
+							scope: _this,
+                            type: "GET",
+                            url: _this._gloConfig.urlPrefix+'/crm/class/msg_down/info/'+cs.mid,
+                            dataType: 'json',
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                //获取状态码
+                                if(res.code !== 0){
+                                    return false;
+                                };
+                                var data = res.data, topmess=$('.msgmess');
+                                topmess.find('.himgt img').attr('src',_this._gloConfig.xijqwResUrl+'/avatar/'+data.teacher_id);
+                                topmess.find('.name').html($.getNameById(data.teacher_id,_this._locStorage));
+                                topmess.find('.time').html('发布于:'+$.formatDate((data.ts||0)*1000, "yyyy-MM-dd hh:mm"));
+                                topmess.find('.title').html(data.title);
+                                topmess.find('.msg').html(data.content);
+                                $('.hr span,.back span').html(data.chat_count);
+                                $('.see span').html(data.reader_count)
+                                _this._summess(summess, data.readers);
+                                _this._setvote(data.vote);
+                                //图片预览
+                                if(data["pics"].length){
+                                    _this._showImgs(data["pics"]);
+                                }
+                                $('.replays').append(_this._replayitem(data.chats || []));
+                            }
+                        });
+                    },
+                    bindEvent:function(summess){
+						var _this = this;
+                        var cs = $.getRequest();
+                        //图片预览
+                        var cimgs = $("#J_classimgs");
+                        cimgs.on("click", "img", function(event){
+                            var srcs = (JSON.parse(cimgs.data("imgkeys").replace(/'/g, '"')) || []).map(function(item, index, array){
+                                return _this._gloConfig.xijqwResUrl+'/'+item+'-m';
+                            });
+                            var currimg = _this._gloConfig.xijqwResUrl+'/'+$(this).data("ingkey")+'-m';
+                            wx.previewImage({
+                                current: currimg, // 当前显示的图片链接
+                                urls: srcs // 需要预览的图片链接列表
+                            });
+                        });
+                        //
+                        $('body').on('click','.replayback',function(){
+                            $(this).closest('.replay').next().slideToggle();
+                        }).on('click','.meback',function(){
+                            $(this).parent().next().slideToggle();
+                        }).on('click','.rinpa .submit',function(){
+                            var $this = $(this);
+                            var $par = $this.parent();
+                            var $box = $par.next();
+                            var input = $this.prev(".text.control");
+                            var text = $.trim(input.val());
+                            if(text.length==0){
+                                $.tipshow({'msg':"请输入内容",'type':'waring'});
+                                return false;
+                            }
+                            $.tipshowopen({'msg':'正在提交···'});
+                            $.sendAjax({
+                                scope: _this,
+                                type: "POST",
+                                url: _this._gloConfig.urlPrefix+'/crm/class/msg_down/chat/'+cs.mid,
+                                dataType: 'json',
+                                data: JSON.stringify({'data':{'content':text}}),
+                                success: function(res, textStatus, jqXHR, localStorage) {
+                                    //更新localstorage最新状态
+                                    _this._locStorage = localStorage;
+                                    //获取状态码
+                                    if(res.code !== 0){
+                                        return false;
+                                    };
+                                    var str = '<div class="item bd-t ptb">\
+                                        <div class="replay ptr ovh">\
+                                            <div class="text lh24 pb10 fs12">\
+                                                <img class="himgpsml vam ml5 fr" src="'+_this._gloConfig.xijqwResUrl+'/avatar/'+_this._locStorage['curr']['_id']+'">\
+                                                <p class="ovh">\
+                                                    <span class="peo fwb fr">'+$.getNameById(_this._locStorage['curr']['_id'],_this._locStorage)+'</span>\
+                                                    <span class="fr pr20">'+$.formatDate(res.ts*1000, "yyyy-MM-dd hh:mm")+'</span>\
+                                                </p>\
+                                            </div>\
+                                            <div class="fs12 c33 alir">'+text+'</div>\
+                                        </div>\
+                                    </div>'
+                                    $.tipshowclose({'msg':'回复成功','callback':function(){
+                                        $box.append(str);
+                                        $par.slideToggle();
+                                        input.val("");
+                                    }});
+                                }
+                            })
+                        }).on('click','.enroll .more',function(){
+                            $(this).parent().next().slideToggle();
+                        });
+                        $('.back').on('click',function(){
+                            $('.meback').click();
+                        });
+                        $('.see').on('fastclick', function(){
+                            var $this = $(this);
+                            if($this.hasClass('active')){
+                                $this.removeClass('active');
+                                summess.slideUp(300);
+                            }else{
+                                $this.addClass('active');
+                                summess.slideDown(300);
+                            }
+                        });
+                    },
+                    init: function(){
+                        var summess = $('.summess');
+                        this.initPage();
+                        this.renderData(summess);
+                        this.bindEvent(summess);
+                    }
+                };
+            })();
+            $(function(){
+                tMessageShowPage.init();
+            });
+        })(jQuery, window, document);
+    </script>
+</body>
+</html>

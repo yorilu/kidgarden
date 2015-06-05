@@ -1,0 +1,90 @@
+{
+    "code": 0,
+    "msg": "ok",
+    "data": {
+        "id": 1,
+        "headimg": "http://7ximo5.com1.z0.glb.clouddn.com/tea01.jpg",
+        "teacher": "王塞",
+        "role":"老师",
+        "time": "2012-4-30 12:12",
+        "title":"五一劳动节春游放假通知公告",
+        "msg": "学校决定五一放几天假，各位家长可以陪孩子去玩几天，我么老师也可以玩几天，学校决定五一放几天假，各位家长可以陪孩子去玩几天，我么老师也可以玩几天，学校决定五一放几天假，各位家长可以陪孩子去玩几天，我么老师也可以玩几天，学校决定五一放几天假，各位家长可以陪孩子去玩几天，我么老师也可以玩几天，学校决定五一放几天假，各位家长可以陪孩子去玩几天，我么老师也可以玩几天，",
+        "replays":[
+            {
+                "mid":1,
+                "name":"汪婉姬",
+                "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head15.jpg",
+                "role":"妈妈",
+                "time":"2015-03-25 12:12",
+                "msg":"请问王老师，五一这几天是否会给孩子留太多作业呢？",
+                "replay":[
+                    {
+                        "name":"李广权",
+                        "role":"妈妈",
+                        "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head14.jpg",
+                        "time":"2015-03-25 12:12",
+                        "msg":"我问了，不会很多"
+                    },
+                    {
+                        "name":"张子寒",
+                        "role":"妈妈",
+                        "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head13.jpg",
+                        "time":"2015-03-25 12:12",
+                        "msg":"我也有这个疑问，现在知道了"
+                    },
+                    {
+                        "name":"张志宇",
+                        "role":"妈妈",
+                        "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head12.jpg",
+                        "time":"2015-03-25 12:12",
+                        "msg":"不要太多就可以了"
+                    }
+                ]
+            },
+            {
+                "mid":1,
+                "name":"苗昆菁",
+                "role":"妈妈",
+                "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head11.jpg",
+                "time":"2015-03-25 12:12",
+                "msg":"五一时间比较长，请问王老师是否有可推荐的特长班呢？",
+                "replay":[
+                    {
+                        "name":"王塞",
+                        "role":"老师",
+                        "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head10.jpg",
+                        "time":"2015-03-25 12:12",
+                        "msg":"可以学学画画或者唱歌"
+                    },
+                    {
+                        "name":"苗佳奇",
+                        "role":"妈妈",
+                        "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head09.jpg",
+                        "time":"2015-03-25 12:12",
+                        "msg":"我家孩子在这边的一个班，你可以过来看看"
+                    }
+                ]
+            },
+            {
+                "mid":1,
+                "name":"王天扬",
+                "role":"妈妈",
+                "headimg":"http://7ximo5.com1.z0.glb.clouddn.com/head08.jpg",
+                "time":"2015-03-25 12:12",
+                "msg":"假期期间是否可以请老师补补课？",
+                "replay":[]
+            }
+        ],
+        "enroll":["汪婉姬","李广权","张子寒","张惠","张志宇","苗昆菁","汪俊填","李飞","苗佳奇","王天扬"],
+        "vote":{
+            "total":70,
+            "isvote":0,
+            "ls":[
+                {"title":"上海世纪公园","poll":41},
+                {"title":"上海湿地公园","poll":12},
+                {"title":"上海崇明岛上的一个大公园","poll":17}
+            ]
+        },
+        "eye":["张佳","汪婉姬","李广权","张子寒","汪俊填","苗佳奇","李飞","王鸣晨","苗佳奇","张惠","王伊菡","王詠茹","王伊菡","张豪毛"]
+    }
+}

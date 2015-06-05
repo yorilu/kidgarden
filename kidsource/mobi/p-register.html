@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/part/register.css" rel="stylesheet" type="text/css" />
+	<title>家长注册</title>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=5"></script>
+</head>
+<body>
+	<section class="html t-register p0 ptr ovh">
+		<section class="regstep pta wp100 regstepone">
+			<div class="fixed">
+				<div class="t-title"><p>第(1/3)步-选择学校</p><p class="condition"></p></div>
+			</div>
+            <div class="forminfo adr ovh pt10 plr">
+                <div class="inpntline fl wp33 pr1">
+                    <p class="ovh bd-all">
+                        <select class="control fs14 tint10" id="sheng">
+                        </select>
+                        <i class="fa fa-angle-down"></i>
+                    </p>
+                </div>
+                <div class="inpntline fl wp33 pr1">
+                    <p class="ovh bd-all">
+                        <select class="control fs14 tint10" id="shi">
+                        </select>
+                        <i class="fa fa-angle-down"></i>
+                    </p>
+                </div>
+                <div class="inpntline fl wp33">
+                    <p class="ovh bd-all">
+                        <select class="control fs14 tint10" id="qu">
+                        </select>
+                        <i class="fa fa-angle-down"></i>
+                    </p>
+                </div>
+            </div>
+            <section class="list p10" id="sclist">
+            </section>
+		</section>
+		<section class="regstep pta wp100 bgcf6f6f6 regsteptwo next" id="regsteptwo">
+			<div class="fixed">
+				<div class="t-title"><p>第(2/3)步-选择班级</p><p class="condition"></p></div>
+			</div>
+            <section class="classes ovh pt10">
+                <div class="itembox ovh p10 bgcfff ptr">
+                    <p class="stil pta fs12 lh24 c66">当前学校</p>
+                    <a href="javascript:;" class="gobackone change dsb pta r10 fs12 c33"><i class="fa fa-edit c33 mr5 fs16 vam"></i>更改学校</a>
+                    <p class="J_selectschool fwb"></p>
+                </div>
+                <div class="itembox ovh p10 bgcfff ptr mt10"  id="classtitle">
+                    <p class="stil pta fs12 lh24 c66">已有班级</p>
+                    <div class="classlist pb10 ovh" id="classlist"></div>
+                </div>
+			</section>
+		</section>
+        <section class="regstep pta wp100 bgcf6f6f6 regstepthree next" id="regstepthree">
+			<div class="fixed">
+				<div class="t-title"><p>最后一步-完善信息</p><p class="condition"></p></div>
+			</div>
+			<div class="forminfo p10 scrolly" id="J_addScroll">
+                <div class="itembox ovh p10 bgcfff ptr">
+                    <p class="stil pta fs12 lh24 c66">当前学校</p>
+                    <a href="javascript:;" class="gotoone change dsb pta r10 fs12 c33"><i class="fa fa-edit c33 mr5 fs16 vam"></i>更改学校</a>
+                    <p class="J_selectschool fwb"></p>
+                </div>
+                <div class="itembox ovh p10 bgcfff ptr mt10">
+                    <p class="stil pta fs12 lh24 c66">当前班级</p>
+                    <a href="javascript:;" class="gobacktwo change dsb pta r10 fs12 c33"><i class="fa fa-edit c33 mr5 fs16 vam"></i>更改班级</a>
+                    <p class="J_selectclass fwb"></p>
+                </div>
+
+                <div class="itembox ovh p10 bgcfff ptr mt10">
+                    <p class="stil pta fs12 lh24 c66">个人信息</p>
+                    <div class="inpntline">
+                        <input class="controla" id="bbname" type="text" placeholder="请输入宝贝的姓名">
+                        <p class="rtip-red">必填</p>
+                    </div>
+                    <div class="pt10 pb10">
+                        宝贝性别：
+                        <label class="radio"><input type="radio" name="sex" value="0" checked><span></span>女</label>
+                        <label class="radio"><input type="radio" name="sex" value="1"><span></span>男</label>
+                    </div>
+                    <div class="inpntline">
+                        <select class="controla" id="relation">
+                            <option value="0" selected>妈妈</option>
+                            <option value="1">爸爸</option>
+                            <option value="2">爷爷</option>
+                            <option value="3">奶奶</option>
+                            <option value="4">叔叔</option>
+                            <option value="5">阿姨</option>
+                            <option value="6">其他</option>
+                        </select>
+                        <i class="fa fa-angle-down"></i>
+                    </div>
+                    <br>
+                </div>
+			</div>
+            <div class="pta b0 wp100 p10">
+                <a class="btn bgc dsb fl alic cff bdr20 b0 wp100 finish" href="javascript:;">确认并提交</a>
+            </div>
+		</section>
+        <section class="tcover ptf wp100 hp100 l0 t0 p10 hide" id="tcover">
+            <p class="title cd fs24 alic">注册成功</p>
+            <p class="text pb10">待老师审核后进入班级</p>
+            <p class="text pb10">您可进入个人中心完善信息或查看功能</p>
+            <a href="index2.html?enter=1" class="enter cd bdr20 dsb wp100 fs14 alic bd-all bgcfff pta lp50 b0">注册完成</a>
+        </section>
+	</section>
+    <script type="text/javascript" src="assets/min/js/area.js"></script>
+    <script type="text/javascript">
+        ;(function ($, window, document, undefined) {
+            var pRegisterPage = (function () {
+                return {
+                    _gsheng: 44,
+                    _gshi: 45,
+                    _gqu: 55,
+                    _sid: "",
+                    _classid: "",
+                    _sclist: $('#sclist'),
+                    _classlist: $('#classlist'),
+                    _regsteptwo: $("#regsteptwo"),
+                    _regstepthree: $('#regstepthree'),
+                    _gloConfig: window.globalConfig,
+                    _getRequest: function(){
+                        var url = window.location.search,
+                                theRequest = {},
+                                str = '',
+                                para = [];
+                        if (url.indexOf("?") != -1) {
+                            str = url.substr(1);
+                            strs = str.split("&");
+                            for(var i = 0, len = strs.length; i < len; i ++) {
+                                para = strs[i].split("=");
+                                //decodeURI()、decodeURIComponent
+                                theRequest[para[0]] = decodeURIComponent( (para.length>=2)?para[1]:"");
+                            }
+                        }
+                        return theRequest;
+                    },
+                    _tipshow: function(options) {
+                        var msg = options.msg;
+                        var type = options.type ? options.type : 'info';
+                        var ico = options.ico ? options.ico : 'info-circle';
+                        var str = '<div class="tippop ptf z10 fs12 wp100 alic"><div class="dsilb fs12 text ' + type + '"><i class="fa fa-' + ico + '"></i>' + msg + '</div></div>';
+                        var pop = $('body').append(str).find('.tippop');
+                        //$('body').append(str);
+                        //var pop = $('.tippop');
+                        setTimeout(function() {
+                            pop.animate({
+                                'opacity': 0
+                            }, 600, function() {
+                                pop.remove();
+                                if (options.callback) {
+                                    options.callback();
+                                }
+                            });
+                        }, 1500);
+                    },
+                    _setInfo: function(schoolName, className) {
+                        var selectschool = $(".J_selectschool"),
+                                selectclass = $(".J_selectclass");
+                        if(schoolName !== null){
+                            schoolName = schoolName || "";
+                            selectschool.text(decodeURIComponent(schoolName));
+                        }
+                        if(className !== null){
+                            className = className || "";
+                            selectclass.text(decodeURIComponent(className));
+                        }
+                    },
+                    _showTwoStep: function(){
+                        this._setInfo(this._sclist.find(".scls.active p.n").text(), null);
+                        this._regsteptwo.animate({"top": 0});
+                    },
+                    _showThreeStep: function(top){
+                        var className = this._classlist.find(".csls.active p.n").text();
+                        this._setInfo(null, className);
+                        this._regstepthree.animate({"top": (top || 0)});
+                    },
+                    _getClassList: function(scid, classid, callback){
+                        var _this = this;
+                        $.ajax({
+                            scope: _this,
+                            type: "GET",
+                            url:  _this._gloConfig.urlPrefix+"/crm/class/list/"+scid,
+                            dataType: "json",
+                            "processData": true,
+                            "xhrFields": {
+                                withCredentials: true
+                            },
+                            success: function(res, textStatus, jqXHR) {
+                                var str = "", ac;
+                                if(res.code !== 0){
+                                    return false;
+                                }
+                                for(var i= 0, data=res.data, len=data.length; i<len;i++){
+                                    ac = ""
+                                    if(data[i]["_id"] === +classid){
+                                        ac = "active";
+                                    }
+                                    str += '<div class="csls fl alic '+ac+'" data-classid="'+data[i]["_id"]+'"><a href="javascript:;" class="dsb c33 pt5 pb5"><p class="n ellipsis">'+data[i]["title"]+'</p><p class="t fs12">'+(data[i]["creater"] && data[i]["creater"]["name"] || "")+'</p></a></div>';
+                                }
+                                _this._classlist.html(str);
+                                //
+                                callback && callback.call(null);
+                            }
+                        })
+                    },
+                    renderData: function(){
+                        var gsheng = this._gsheng,
+                            gshi = this._gshi,
+                            gqu = this._gqu,
+                            $winh = window.innerHeight,
+                            $winw = window.innerWidth,
+							_this = this;
+                        $('.regstep,.t-register').css('height',$winh);
+                        $('#J_addScroll').css('height',$winh-100);
+                        _this._sclist.css('height', $winh-160);
+                        //选择地址
+                        window.showLocation(gsheng, gshi, gqu ,'#sheng','#shi','#qu');
+                        //获取url中的参数
+                        var tickets = ((_this._getRequest() ||"")["ticket"]||"").split("_");
+                        if(+tickets[0]) this._sid = +tickets[0];
+                        if(+tickets[1]) this._classid = +tickets[1];
+                        //获取school列表数据
+                        //获取数据并填充
+                        $.ajax({
+							scope: _this,
+                            type: "GET",
+                            url: _this._gloConfig.urlPrefix+"/crm/kg/list",
+                            dataType: "json",
+                            "processData": true,
+                            "xhrFields": {
+                                withCredentials: true
+                            },
+                            success: function(res, textStatus, jqXHR) {
+                                var str="", namearr=[], ac;
+                                if(res.code !== 0){
+                                    return false;
+                                }
+                                for(var i= 0, data= res.data, len = data.length; i < len;  i++){
+                                    namearr.push(data[i].name);
+                                    //带参数的url初始化school列表
+                                    ac = "";
+                                    if(_this._sid === data[i]["_id"]){
+                                        ac = "active";
+                                    }
+                                    str += '<a href="javascript:;" data-sid="'+data[i]["_id"]+'" class="scls mt1 bgcfff p10 dsb c33 ptr '+ac+'" ><p class="n fwb">'+data[i]["title"]+'</p><i class="fa fa-check cd pta r10 dsn"></i></a>';
+                                }
+                                _this._sclist.append(str);
+                            }
+                        })
+                        //带参数的url初始化class列表
+                        if(_this._sid){
+                            _this._getClassList(_this._sid, _this._classid, null);
+                            _this._setInfo(tickets[2] || "", tickets[3] || "");
+                            _this._regsteptwo.css("top","0px");
+                            _this._regstepthree.css("top","0px");
+                        }
+                    },
+                    bindEvent:function(sclist, classlist){
+                        var gsheng = this._gsheng,
+                            gshi = this._gshi,
+                            gqu = this._gqu,
+                            $winh = window.innerHeight,
+                            $winw = window.innerWidth,
+                            _this = this;
+                        _this._sclist.on('click','.scls',function(){
+                            var $this = $(this);
+                            var scid = parseInt($this.data('sid'));
+                            $this.addClass('active').siblings().removeClass('active');
+                            //
+                            _this._setInfo($this.find("p.n").text(), null);
+                            if(_this._sid != scid){
+                                //
+                                _this._getClassList(scid, null, function(){
+                                    _this._sid = scid;
+                                    _this._classlist.show();
+                                    _this._showTwoStep();
+                                    $this.data('ajax', 1);
+                                }.bind(_this))
+                            }else{
+                                $('.regsteptwo').animate({'top':0});
+                            }
+                        });
+                        //
+                        _this._classlist.on('click','.csls',function(){
+                            var $this = $(this);
+                            $this.addClass('active').siblings().removeClass('active');
+                            _this._classid = $this.data("classid");
+                            _this._showThreeStep.call(_this, 0);
+                        });
+                        //
+                        $('.html').on('click','.gobackone',function(){
+                            $('.regsteptwo').animate({'top':$winh});
+                        }).on('click','.gobacktwo',function(){
+                            $('.regstepthree').animate({'top':$winh});
+                        }).on('click','.gotoone',function(){
+                            _this._showThreeStep($winh);
+                            _this._regsteptwo.css({'top':$winh});
+                        }).on('click','.finish',function(){
+                            var bbname = $('#bbname').val().replace(/\s/ig,'');
+                            var relation = parseInt($('#relation').val(), 10);
+                            var sex = parseInt($('input[name="sex"]:checked').val(), 10);
+                            if(bbname.length === 0){
+                                _this._tipshow({"msg":"宝贝姓名不可为空","type":"waring","ico":"times"});
+                                return false;
+                            }
+                            if([0,1,2,3,4,5,6].indexOf(relation) < 0){
+                                _this._tipshow({"msg":"与宝贝关系选项不可为空","type":"waring","ico":"times"});
+                                return false;
+                            }
+                            if([0,1].indexOf(sex) < 0){
+                                _this._tipshow({"msg":"宝贝性别不可为空","type":"waring","ico":"times"});
+                                return false;
+                            }
+                            var dataStr = JSON.stringify({
+                                'data':{
+                                    'child':{
+                                        "name": bbname,
+                                        "kg_id": _this._sclist.find('.scls.active').data('sid') || " ",
+                                        "class_id": _this._classlist.find('.csls.active').data('classid') || " ",
+                                        "sex": sex
+                                    },
+                                    "relation": relation
+                                }
+                            });
+                            $.ajax({
+								scope: _this,
+                                type: "POST",
+                                url: _this._gloConfig.urlPrefix+"/crm/parent/register",
+                                dataType: "json",
+                                contentType: "application/json",
+                                "processData": true,
+                                "xhrFields": {
+                                    withCredentials: true
+                                },
+                                data: dataStr,
+                                success: function(res, textStatus, jqXHR) {
+                                    if(res.code !== 0){
+                                        return false;
+                                    }
+                                    window.localStorage.setItem("first",'1');
+                                    $('#tcover').show();
+                                }
+                            })
+                        });
+                    },
+                    init: function(){
+                        this.renderData();
+                        this.bindEvent();
+                    }
+                };
+            })();
+            $(function(){
+                pRegisterPage.init();
+            });
+        })(jQuery, window, document);
+    </script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/part/tcheck.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/datepicker.css" rel="stylesheet" type="text/css" />
+	<title>考勤报表</title>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=6"></script>
+</head>
+<body>
+	<section class="html t-check">
+		<section class="selectbox">
+			<section class="selects">
+				<div class="p10 ptr chdaya j_chday" data-month="" data-year="">
+					<input type="text" class="control tind0 alic" id="datepickerb" readonly>
+					<a href="javascript:;" class="prevm pta l10 t10 dsb z1 alic dsb"><i class="fa fa-angle-left c66"></i></a>
+					<a href="javascript:;" class="nextm pta r10 t10 dsb z1 alic dsb"><i class="fa fa-angle-right c66"></i></a>
+				</div>
+				<div class="th bd-b">
+					<p class="fl wp50 pl50">姓名</p><p class="alir fl wp50 pr10">缺勤天数</p>
+				</div>
+				<div class="listdays">
+				</div>
+			</section>
+		</section>
+        <div class="latelist ptf z5 bgcfff wp100 hp100 dsn" id="latelist">
+            <div id="rldiv"></div>
+            <div class="nodays pt10 pl10 pb10">本月共<span class="cf0 plr5">0</span>天请假</div>
+            <div id="J_ctype" class="res pl10 c33 fs12"></div>
+            <div id="J_cteac" class="res pl10 c33 fs12"></div>
+            <div id="J_crole" class="res pl10 c33 fs12"></div>
+            <div id="J_cres" class="res pl10 c33 fs12"></div>
+            <a href="javascript:;" class="bgcddd close pta dsb b0 wp100 alic c33">关闭</a>
+        </div>
+    </section>
+    <script type="text/javascript" src="assets/min/js/datepicker.js"></script>
+    <script type="text/javascript" src="assets/min/js/extend.js"></script>
+    <script type="text/javascript">
+        ;(function ($, window, document, undefined){
+            var tCheckPage = (function(){
+                return {
+                    _locStorage: window.currLocStorage || {},
+                    _gloConfig: window.globalConfig,
+                    _imgs:null,
+                    _getres:function(num){
+                        if(num === 0) return "<span class='late pta b0'>缺勤</span>";
+                        if(num === 1) return "<span class='sick pta b0'>病假</span>";
+                        if(num === 2) return "<span class='leave pta b0'>事假</span>";
+                        if(num === 3) return "<span class='other pta b0'>其他</span>";
+                    },
+                    _resType:function(num){
+                        if(num === 0) return "缺勤";
+                        if(num === 1) return "病假";
+                        if(num === 2) return "事假";
+                        if(num === 3) return "其他";
+                    },
+                    _appdays: function (js, y, m){
+                        // 考勤报表
+                        var str = '';
+                        for(var i=0;i<js.length;i++){
+                            str += '<a href="javascript:;" class="ls plr pt5 pb5 dsb ptr c33" data-name="'+ $.getNameById((js[i]["child_id"]|| ""),this._locStorage)+
+                                    '" data-uid="'+js[i]["child_id"]+'" data-month="'+m+'" data-year="'+y+'">'+
+                                    '<p class="himgp vam dsilb mr10"><img src="'+ this._gloConfig.xijqwResUrl+"/avatar/"+js[i]["child_id"]+'"></p>'+ $.getNameById((js[i]["child_id"]|| ""),this._locStorage)+
+                                    '<p class="d pta r30"><span class="plr5 cf0">'+(js[i]["count"] || "")+'天</span></p></a>';
+                        }
+                        $('.listdays').html(str);
+                    },
+                    _getReportDataForChangeMonth: function(year, month, _this){
+                        // 月份更新后重置报表考勤内容
+                        $.sendAjax({
+                            scope: _this,
+                            type: "GET",
+                            url:  _this._gloConfig.urlPrefix+"/crm/teachers/class_absence/month_report/"+year+"-"+month,
+                            dataType: "json",
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                //
+                                if(res.code !== 0){
+                                    return false;
+                                }
+                                // 重置考勤报表内容
+                                _this._appdays(res.data, year, month);
+                            }
+                        });
+                    },
+                    _changeMonthForReport: function($this, state, _this){
+                        // 月份更新后
+                        var par = $this.parent();
+                        var year = parseInt(par.attr('data-year'));
+                        var month = parseInt(par.attr('data-month'));
+                        if(state === "next"){
+                            month++
+                            if(month>12){
+                                year++;
+                                month=1;
+                            }
+                        }
+                        if(state === "prev"){
+                            month--
+                            if(month<1){
+                                year--;
+                                month = 12;
+                            }
+                        }
+                        par.attr('data-year',year);
+                        par.attr('data-month', $.formatDay(month));
+                        $('#datepickerb').val(year+'-'+ $.formatDay(month));
+                        // 日历重置
+                        _this._latelist.initialday(month,year);
+                        _this._getReportDataForChangeMonth(year,  $.formatDay(month), _this);
+                    },
+                    renderData: function(){
+                        var par = $('.chdaya');
+                        var year = par.attr('data-year');
+                        var month = par.attr('data-month');
+                        this._getReportDataForChangeMonth(year, month, this);
+                    },
+                    initDatepicker:function(){
+                        // 初始日历控件
+                        var date = new Date(),
+                            _this = this,
+                            y = date.getFullYear(),
+                            m = $.formatDay(date.getMonth()+ 1),
+                            d = $.formatDay(date.getDate());
+                        $('#datepickerb').val(y+'-'+ $.formatDay(m));
+                        $('.j_chday').attr({'data-year':y,"data-month":m});
+                        //
+                        _this._latelist = new DatePicker({
+                            "target":"#rldiv",
+                            "showtype":"indiv",
+                            "timeformat":"y-m-d",
+                            "timegroup":"y-m-d",
+                            "defaultdate":y+'-'+m+'-'+d,
+                            "prev":0,
+                            "next":0
+                        })
+                    },
+                    initPage: function(){
+                        //初始化底部菜单
+                        $.gentoolbar({
+                            pageId: "t-check",
+                            mainToolBarTemp: this._gloConfig.mainTeaToolBarTpml
+                         });
+                    },
+                    bindEvent: function(){
+                        var date = new Date(),
+                            y = date.getFullYear(),
+                            m = date.getMonth()+ 1,
+                            d = date.getDate(),
+                            _this = this,
+                            _this = this,
+                            winw = window.innerWidth,
+                            winh = window.innerHeight,
+                            J_ctype = $('#J_ctype'),
+                            J_cteac = $('#J_cteac'),
+                            J_crole = $('#J_crole'),
+                            J_cres = $('#J_cres');
+
+                        var latelist = $('#latelist'); //考勤报表详细日期
+
+                        //
+                        $('body').on('click','.prevm',function(){
+                            _this._changeMonthForReport($(this), "prev", _this);
+                        }).on('click','.nextm',function(){
+                            _this._changeMonthForReport($(this), "next", _this);
+                        }).on('click','.listdays .ls',function(){
+                            // 查看考勤报表详情
+                            var $this = $(this),
+                                uid = $this.attr('data-uid'),
+                                year = $this.attr('data-year'),
+                                month = $this.attr('data-month');
+                            var detailTime = $(this).data("detail-time");
+                            _this._latelist.namespan.html($this.data('name'));
+                            $('.res').html('');
+                            var setClass = function(elem, d){
+                                d = d.split("-");
+                                elem.find("a[data-year="+(+d[0])+"][data-month="+(+d[1])+"][data-date="+(+d[2])+"]").addClass("leave-jia");
+                                // day = parseInt($.formatDate(n.date, "dd"));
+                                // tds.filter("[data-date='"+day+"']").append(_this._getres(n.reason)).attr({'data-res':n.title||'','data-is':1});
+                                return true;
+                            };
+                            if(!!detailTime){
+                                detailTime = JSON.parse(detailTime.replace(/'/g,'"'));
+                                latelist.show();
+                                latelist.find("td span").remove();
+                                var tds = $('#rldiv a[data-year]');
+                                for(var i= 0, data=detailTime["ad"], len=data.length; i<len; i++){
+                                //     // setClass(latelist, data[i]);
+                                    var day = parseInt($.formatDate(data[i].date, "dd"));
+                                    tds.filter("[data-date='"+day+"']").append(_this._getres(data[i].reason)).attr({'data-res':data[i].title,'data-tid':data[i].teacher_id,"data-pid":data[i].parent_id,'data-type':data[i].reason});
+                                }
+                            }else{
+                                latelist.show();
+                                $.sendAjax({
+                                    scope: _this,
+                                    type: "GET",
+                                    url: _this._gloConfig.urlPrefix+'/crm/child/absence/month_report/'+year+'-'+month+'/'+uid,
+                                    dataType: 'json',
+                                    success: function(res, textStatus, jqXHR, localStorage) {
+                                        //获取到请假具体时间
+                                        //更新localstorage最新状态
+                                        _this._locStorage = localStorage;
+                                        //
+                                        if(res.code !== 0){
+                                            return false;
+                                        };
+                                        var d=[], ad=[];
+                                        var tds = $('#rldiv a[data-year]');
+                                        // latelist.find(".leave-jia").removeClass("leave-jia");
+                                        latelist.find("td span").remove();
+                                        var nod = 0;
+                                        for(var i= 0, data=res.data, len=data.length; i<len; i++){
+                                            //d = getTime(data[i]["date"]);
+                                            nod++;
+                                            // d = $.formatDate(data[i]["date"], "yyyy-MM-dd") || "";
+                                            ad.push(data[i]);
+                                            // setClass(latelist, d);
+                                            var day = parseInt($.formatDate(data[i].date, "dd"));
+                                            tds.filter("[data-date='"+day+"']").append(_this._getres(data[i].reason)).attr({'data-res':data[i].title,'data-tid':data[i].teacher_id,"data-pid":data[i].parent_id,'data-type':data[i].reason});
+                                        }
+                                        $('.nodays span').html(nod);
+                                        $this.attr("data-detail-time", JSON.stringify({"ad": ad}).replace(/"/g,"'"));
+                                    }
+                                });
+                            }
+                        }).on('click','#latelist .close',function(){
+                            $('#latelist').hide();
+                            latelist.find(".leave-jia").removeClass("leave-jia");
+                        });
+
+                        $('#rldiv').on('click', "a[data-year]", function(){
+                            // 显示请假详情
+                            var $this = $(this);
+                            J_ctype.html('');
+                            J_cteac.html('');
+                            J_crole.html('');
+                            J_cres.html('');
+                            if(parseInt($this.data('tid'))){
+                                if(parseInt($this.data('type'))){
+                                    J_ctype.html('类型：'+_this._resType(parseInt($this.data('type'))));
+                                    J_cteac.html('处理人：'+$.getNameById(parseInt($this.data('tid')),_this._locStorage));
+                                    J_crole.html('申请人：'+$.getRelationByParentId(parseInt($this.data('pid')),_this._locStorage));
+                                    J_cres.html('备注：'+$this.data('res'));
+                                }else{
+                                    J_ctype.html('类型：'+_this._resType(parseInt($this.data('type'))));
+                                    J_cteac.html('处理人：'+$.getNameById(parseInt($this.data('tid')),_this._locStorage));
+                                }
+                            }
+                        });
+                    },
+                    init: function(){
+                        //初始化时间控件
+                        this.initDatepicker();
+                        //
+                        this.initPage();
+                        //初始化数据
+                        this.renderData();
+                        //绑定事件
+                        this.bindEvent();
+                    }
+                };
+            })();
+            //
+            $(function(){
+                //
+                tCheckPage.init();
+            });
+        })(jQuery, window, document);
+    </script>
+</body>
+</html>

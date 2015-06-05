@@ -1,0 +1,22 @@
+@charset "utf-8";
+/* CSS Document */
+.ls{ background: #fff;}
+.rnot{ border-top:5px solid #09bb07;}
+.status{ height: 20px; border-bottom: 1px dotted #ddd;}
+.rnot .status{ color:#09bb07;}
+.del{ color: #999;}
+.img{ height: 50px; width: 50px; }
+.top .tname{ padding: 7px 0 8px;}
+.ptop .tname{ padding: 7px 0 0;}
+.pdo-btn{ height: 30px; }
+.control{ border:1px solid #ddd;}
+textarea.control{ padding-top: 5px; height: 100px;}
+.btns, .btns a{ height: 40px; }
+.btns{ left: 0; bottom: 0; width: 100%;}
+.btns a{ width: 50%; line-height: 40px; border-left: 1px solid #fff;}
+.btns a:nth-child(1){border: none;}
+.teacher{ padding: 10px 0 0 10px;}
+.nls{ width: 50px; margin-right: 10px;}
+.tah-img{ border-radius: 10%;}
+.tah-name{  white-space: nowrap; text-overflow:ellipsis;}
+.nls.active .himgt{ border:3px solid #1abc9c;}

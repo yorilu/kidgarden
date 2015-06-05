@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+	<title>班级消息</title>
+    <style type="text/css">
+        .t-message .type{ width: 50px;}
+        .t-message .sum{ height: 20px; margin-top: 1px;border-radius: 0 0 10px 10px; }
+    </style>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=5"></script>
+</head>
+<body>
+	<section class="html t-message">
+		<div class="list">
+		</div>
+        <div id="J_modLoad" class="mod-load alic ptb c66"><img class="mr10" src="http://7xix4h.com1.z0.glb.clouddn.com/images/loading.gif">加载中……</div>
+	</section>
+    <script type="text/javascript" src="assets/min/js/extend.js"></script>
+    <script type="text/javascript">
+        ;(function ($, window, document, undefined) {
+            var pMessagePage = (function () {
+                return {
+                    _locStorage: window.currLocStorage || {},
+                    _gloConfig: window.globalConfig,
+                    _isloading: false,
+                    _isover: false,
+                    _currpage: 1,
+                    initPage: function(){
+                        //初始化底部菜单
+                        $.gentoolbar({
+                            pageId: "p-message",
+                            mainToolBarTemp: this._gloConfig.mainParToolBarTpml
+                        });
+                    },
+                    renderData: function(page, modload){
+                        var _this = this;
+                        //班级消息
+                        $.sendAjax({
+                            scope: _this,
+                            type: "GET",
+                            url: _this._gloConfig.urlPrefix+"/crm/class/msg_down/history/10/"+page,
+                            dataType: "json",
+                            beforeSend: function(){
+                                if(_this._isloading) return false;
+                                _this._isloading = true;
+                                modload.show();
+                            },
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                //获取状态码
+                                if(res.code !== 0){
+                                    return false;
+                                };
+                                if(page !==1 && _this._isover) {
+                                    return false;
+                                }
+                                modload.hide();
+                                var data = res.data, len = data.length;
+                                if(page === 1 && len === 0){
+                                    $.bodyempty();
+                                    modload.hide();
+                                    _this._isover = true;
+                                    return false;
+                                }
+                                var user_id = $.getCurrUserId(_this._locStorage);
+                                var str = '', lstr = '';
+                                var teacher_id, de;
+                                for(var i= 0; i<len; i++){
+                                    teacher_id = data[i]["teacher_id"]
+                                    de = teacher_id == user_id ? '<span href="javascript:;" class="del dsn" data-mid="'+data[i]["_id"]+'"><i class="fa fa-trash-o"></i></span>':'';
+                                    str+='<div class="item ovh plr mt10"><a class="ls lsa ovh dsb ptr c33 pl60 bgcfff" href="p-messageshow.html?mid='+data[i]["_id"]+'">\
+                                        <p class="himgt pta l10 t10"><img src="'+this._gloConfig.xijqwResUrl+'/avatar/'+teacher_id+'"></p>\
+                                        <p class="pt10 fs14 ellipsis">'+data[i]["title"]+'</p>\
+                                        <p class="pb10 fs12">'+ $.getNameById(teacher_id, _this._locStorage)+'<span class="fs12 ml10">'+ $.formatDate((data[i]["ts"]||0)*1000, "yyyy-MM-dd hh:mm")+'</span></p>'+de+'\
+                                        </a>\
+                                        <div class="sum bgcfff pr20 alir c99 fs12"><p class="fs12 ml20 dsilb"><i class="fa fa-eye"></i><span>'+data[i]["reader_count"]+'</span></p><p class="fs12 ml20 dsilb"><i class="fa fa-comment-o"></i><span>'+data[i]["chat_count"]+'</span></p></div>\
+                                    </div>';
+                                }
+                                $('.t-message .list').append(str);
+                                if(len < 10){
+                                    modload.show().html('已加载全部数据');
+                                    _this._isover = true;
+                                }
+                                _this._isloading = false;
+                            },
+                            error: function(){
+                                _this._isloading = false;
+                                if(page > 1){
+                                    _this._currpage = _this._currpage - 1;
+                                }
+                            }
+                        });
+                    },
+                    bindEvent: function(modload){
+                        var _this = this,
+                            doc = $(document),
+                            winh = window.innerHeight,
+                            setTimer = null,
+                            page = 1;
+                        //动态加载
+                        document.addEventListener("touchmove", function(e){
+                            clearTimeout(setTimer);
+                            setTimer = setTimeout(function() {
+                                var top = doc.scrollTop(),
+                                    doch = doc.height();
+                                if ((top + winh) > (doch - (_this._gloConfig.loadFireHeight || 200))) {
+                                    if (_this._isover || _this._isloading) {
+                                        return false;
+                                    }
+                                    _this.renderData(++page, modload);
+                                }
+                            }, 100);
+                        }, false);
+                    },
+                    init: function(){
+                        var modload = $("#J_modLoad");
+                        this.initPage();
+                        this.renderData(this._currpage, modload);
+                        this.bindEvent(modload);
+                    }
+                };
+            })();
+            $(function(){
+                pMessagePage.init();
+            });
+        })(jQuery, window, document);
+    </script>
+</body>
+</html>

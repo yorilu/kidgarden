@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+	<title>宝贝相册</title>
+    <style type="text/css">
+        .headimg{ height: 60px; width: 60px; border:4px solid #fff; border-radius: 50%; margin-left: -28px;}
+        .m-list{ padding: 0 0 0 28px;}
+        .m-ls{ border-left:4px solid #ddd; padding: 10px 0;}
+        .m-title{ padding: 0 0 10px 15px; height: 30px; position: relative;}
+        .m-title:before{ content: ""; display: block; position: absolute; left: -12px; top: 0; height: 20px; width: 20px; border-radius: 50%; border:3px solid #fff; background: #1abc9c;}
+        .m-time{ color:#999; font-size: 12px; padding: 0 0 10px 15px;}
+        .m-imgs{ padding:0 0 0 15px;}
+        .m-img{ padding: 0 4px 4px 0;}
+        .m-seemore{ height: 40px; line-height: 40px;background: rgba(0,0,0,0.7); color: #fff; margin: -44px 6px 0 15px;}
+    </style>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=5"></script>
+</head>
+<body>
+	<section class="html p-timeline pt10">
+		<div class="m-list">
+		</div>
+        <div id="J_modLoad" class="mod-load alic ptb c66"><img class="mr10" src="http://7xix4h.com1.z0.glb.clouddn.com/images/loading.gif">加载中……</div>
+	</section>
+	<div class="photoswipt ptf lp100  hp100 wp100 bgc000 z7 ovh" id="photoswipt">
+        <a href="javascript:;" class="closeimg dsb z1 pta r0"><img src="http://7xix4h.com1.z0.glb.clouddn.com/images/close.png"></a>
+        <div class="list hp100 pta ">
+        </div>
+        <div class="botdo pta b0 alic wp100">
+            <a href="javascript:;" class="delete dsb wp100 cf00 cff">从宝贝相册移除</a>
+        </div>
+    </div>
+    <script type="text/javascript" src="assets/min/js/extend.js"></script>
+    <script type="text/javascript">
+        ;(function ($, window, document, undefined) {
+            var pTimelinePage = (function () {
+                return {
+                    _locStorage: window.currLocStorage || {},
+                    _gloConfig: window.globalConfig,
+                    _isover: false,
+                    _isloading: false,
+                    _pageSize: 10,
+                    _currpage: 1,
+                    _showimgs: function (pics){
+                        var str='';
+                        for(var i= 0, len=pics.length; i<len; i++){
+                            str+='<p class="m-img fl wp33"><a class="ovh dsb prt" href="javascript:;" data-shape="square"><img data-eq="'+i+'" data-key="'+pics[i]["pkey"]+'" data-src="'+this._gloConfig.xijqwResUrl+'/'+pics[i]["pkey"]+'-m" data-lazy-src="'+this._gloConfig.xijqwResUrl+'/'+pics[i]["pkey"]+'-s"></a></p>';
+                        }
+                        return str;
+                    },
+                    _genListData: function(page, modload){
+                        var _this = this;
+                        $.sendAjax({
+                            scope: _this,
+                            type: "GET",
+                            url:  _this._gloConfig.urlPrefix+"/crm/child_albums/collect/list/"+_this._pageSize+"/"+page,
+                            dataType: "json",
+                            beforeSend: function(){
+                                if(_this._isloading) return false;
+                                _this._isloading = true;
+                                modload.show();
+                            },
+                            success: function(res, textStatus, jqXHR, localStorage) {
+                                //更新localstorage最新状态
+                                _this._locStorage = localStorage;
+                                if(res.code !== 0){
+                                    return false;
+                                }
+                                if(_this._isover) {
+                                    return false;
+                                }
+                                var data=res.data, len=data.length;
+                                var str = '', albums=[], seestr=[], pics=[];
+                                if(page === 1 && len === 0){
+                                    $.bodyempty();
+                                    modload.hide();
+                                    _this._isover = true;
+                                    return false;
+                                }
+                                if(page === 1){
+                                    str += '<p class="headimg ovh ptr"><img src="'+this._gloConfig.xijqwResUrl+'/avatar/'+(data[0]&&data[0]["child_id"] || "")+'"></p>'
+                                }
+                                for(var i= 0; i<len; i++){
+                                    //var tm = (data[i]["date"].split(" "))[0];
+                                    var tm = ( $.formatDate(data[i]["date"], "yyyy-MM-dd")||"");
+                                    str += '<div class="m-ls">'+
+                                    '<div class="m-title">'+tm+'</div>'+
+                                    '<div class="m-imgs ovh" data-date="'+tm+'">'+_this._showimgs(data[i]["pics"])+'</div>'+
+                                    '</div>';
+                                }
+                                $('.m-list').append(str);
+                                if(len < _this._pageSize){
+                                    modload.show().html('已加载全部数据');
+                                    _this._isover = true;
+                                }
+                                _this._isloading = false;
+                                //触发lazyload
+                                $(window).trigger("scroll");
+                            },
+                            error: function(){
+                                _this._isloading = false;
+                                if(page > 1){
+                                    _this._currpage = _this._currpage - 1;
+                                }
+                            }
+                        });
+                    },
+                    initPage: function(){
+                        //初始化底部菜单
+                        $.gentoolbar({
+                            pageId: "p-timeline",
+                            mainToolBarTemp: this._gloConfig.mainParToolBarTpml
+                        });
+                    },
+                    renderData: function(page, modload){
+                        var _this = this;
+                        var user_id = $.getCurrUserId(_this._locStorage);
+                        var child_info = $.getChildInfoByParentId(user_id, _this._locStorage);
+                        $('.headimg img').attr('src',_this._gloConfig.xijqwResUrl+'/avatar/'+ (child_info["_id"] || ''));
+                        //获取列表数据
+                        this._genListData(page, modload)
+                    },
+                    bindEvent:function(modload){
+                        var _this = this,
+                            photo = new PhotoSwipt({
+                                element: '#photoswipt',
+                                delCallBack: function(key){
+                                    $.sendAjax({
+                                        scope: _this,
+                                        type: "GET",
+                                        url: _this._gloConfig.urlPrefix+'/crm/child_albums/del_pic/'+$date_str+'/'+key,
+                                        dataType: "json",
+                                        success: function(res, textStatus, jqXHR, localStorage) {
+                                            //更新localstorage最新状态
+                                            _this._locStorage = localStorage;
+                                            //获取状态码
+                                            if(res.code !== 0){
+                                                return false;
+                                            }
+                                            $.tipshow({'msg':'删除成功','type':'success','ico':'check'});
+                                            photo.imgs.eq(-photo.eq).parent().remove();
+                                            photo.len--;
+                                            photo.initialbox();
+                                            $imgbox.find('img[data-key="'+key+'"]').parent().parent().remove();
+                                        }
+                                    });
+                                }.bind(_this),
+                                scope: _this
+                            }),
+                            winh = window.innerHeight,
+                            doc = $(document),
+                            $imgbox,
+                            $date_str,
+                            setTimer = null;
+                        //绑定lazyload
+                        $(".m-list").lazyload();
+                        //动态加载列表数据
+                        document.addEventListener("touchmove", function(e){
+                            clearTimeout(setTimer);
+                            setTimer = setTimeout(function() {
+                                var top = doc.scrollTop(),
+                                        doch = doc.height();
+                                if ((top + winh) > (doch - (_this._gloConfig.loadFireHeight || 200))){
+                                    if (_this._isover || _this._isloading){
+                                        return false;
+                                    }
+                                    _this._genListData(++(_this._currpage), modload)
+                                }
+                            }, 50);
+                        }, false);
+                        //
+                        $('.html').on('click','.m-imgs img',function(){
+                            $imgbox = $(this).closest('.m-imgs');
+                            var imgs = $imgbox.find('img');
+                            photo.isMe = true;
+                            photo.len = imgs.length;
+                            photo.eq=-$(this).data('eq');
+                            $date_str = $imgbox.data('date');
+                            var str='';
+                            for(var i=0;i<imgs.length;i++){
+                                var im = imgs.eq(i);
+                                str+='<a href="javascript:;" class="ls m0 dsb fl ovh alic ptr hp100" style="width:'+photo.winw+'px"><img data-key="'+im.data('key')+'" data-src="'+im.data('src')+'" src="http://7xix4h.com1.z0.glb.clouddn.com/images/loading.gif"></a>';
+                            }
+                            $('#photoswipt .list').html(str);
+                            photo.initialbox();
+                        }).on('click','.m-seemore',function(){
+                            if(!$(this).hasClass('up')){
+                                $(this).prev().find('.hide').removeClass('hide');
+                                $(this).prev().find('img[src$="gif"]').each(function(){
+                                    $(this).attr('src',$(this).attr('fadesrc'));
+                                });
+                                $(this).remove()
+                            }
+                        });
+                    },
+                    init: function(){
+                        var modload = $("#J_modLoad");
+                        this.initPage();
+                        this.renderData(this._currpage, modload);
+                        this.bindEvent(modload);
+                    }
+                };
+            })();
+            $(function(){
+                pTimelinePage.init();
+            });
+        })(jQuery, window, document);
+    </script>
+</body>
+</html>

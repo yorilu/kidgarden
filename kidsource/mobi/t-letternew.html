@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link href="assets/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/min/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="assets/min/css/widget.css" rel="stylesheet" type="text/css" />
+	<title>新建站内信</title>
+    <style type="text/css">
+        .ls{padding: 0 1px 1px 0;}
+        .ls.active a{ color: #fff; background: #09bb07;}
+        #sentmsg{ height: 40px; line-height: 40px;}
+    </style>
+    <script type="text/javascript" src="assets/min/js/config.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="assets/min/js/jquery.js"></script>
+    <script type="text/javascript" src="assets/min/js/main.js?v=6"></script>
+</head>
+<body>
+	<section class="html t-messagenew p10" style="padding-bottom:50px;">
+		<section class="tabtype">
+			<div class="til pb10"><input type="text" class="control bd-all" placeholder="要说点什么"></div>
+            <div class="list ovh" style="overflow-y:scroll;">
+            </div>
+			<!--<a href="javascript:;" class="btn bg dsb wp50 alic cff bdr5" id="sentmsg">发布站内信</a>-->
+		</section>
+	</section>
+    <script type="text/javascript" src="assets/min/js/extend.js"></script>
+    <script type="text/javascript">
+        ;(function ($, window, document, undefined) {
+            var tLetternewPage = (function () {
+                return {
+                    _locStorage: window.currLocStorage || {},
+                    _gloConfig: window.globalConfig,
+                    initPage: function(){
+                        //初始化底部菜单
+                        $.gentoolbar({
+                            pageId: "t-message",
+                            mainToolBarTemp: this._gloConfig.mainTeaToolBarTpml,
+                            localToolBarTemp: '<a href="javascript:void(0);" id="sentmsg" class="btbtn btn fl bd-l c66 dsb alic wp100">发送</a>'
+                        });
+                    },
+                    renderData: function(){
+						var _this = this;
+                        var user_id = $.getCurrUserId(_this._locStorage);
+                        var class_id = $.getCurrClassId(_this._locStorage);
+                        var child_ids = $.getChildIdsByClassId(class_id);
+                        var str = '';
+                        for(var i= 0, len=child_ids.length; i<len; i++){
+                            str+='<div class="ls fl wp20 alic ptr" data-uid="'+child_ids[i]+'"><a class="dsb bd-all c66 bgcfff" href="javascript:;"><p class="img"><span class="dsb himgpbig mauto" data-shape="square"><img src="'+ this._gloConfig.xijqwResUrl+"/avatar/"+child_ids[i]+'"></span></p><p class="name lh24 ellipsis">'+ $.getNameById(child_ids[i], _this._locStorage)+'</p></a></div>';
+                        }
+                        $('.t-messagenew .list').append(str).css('height', $(window).height()-120);
+                        return;
+                    },
+                    bindEvent:function(){
+						var _this = this;
+                        var sending = false;
+                        $('body').on('click','.t-messagenew .ls',function(){
+                            $(this).toggleClass('active');
+                        });
+                        $('#sentmsg').on('fastclick', function(){
+                            var titleipt = $('.t-messagenew input');
+                            var childs = $('.list .active'), arr = [];
+                            var title = titleipt.val().replace(/\s/ig,'');
+                            if(title.length==0){
+                                $.tipshow({
+                                    'msg':'标题不可为空',
+                                    "type":"waring",
+                                    "ico":"times"
+                                });
+                                return false;
+                            };
+                            if(childs.length==0){
+                                $.tipshow({
+                                    'msg':'您没有选择对象',
+                                    "type":"waring",
+                                    "ico":"times"
+                                });
+                                return false;
+                            }
+                            childs.each(function(idx, elem){
+                                arr.push($(elem).data("uid"));
+                            });
+                            $.sendAjax({
+								scope: _this,
+                                type: "POST",
+                                url: _this._gloConfig.urlPrefix+'/crm/mail_box/send',
+                                dataType: "json",
+                                data: JSON.stringify({
+                                    "data":{
+                                        "to": arr,
+                                        "msg": title
+                                    }
+                                }),
+                                beforeSend: function(){
+                                    if(sending){
+                                        //发送中直接返回false，不继续发送
+                                        return false;
+                                    }
+                                    sending = true;
+                                },
+                                success: function(res, textStatus, jqXHR, localStorage) {
+                                    //更新localstorage最新状态
+                                    _this._locStorage = localStorage;
+                                    //获取状态码
+                                    if(res.code !== 0){
+                                        return false;
+                                    };
+                                    $.tipshow({
+                                        'msg':'添加成功',
+                                        'callback':function(){
+                                            window.history.go(-1);
+                                        }
+                                    });
+                                    titleipt.val("");
+                                    childs.removeClass("active");
+                                    sending = false;
+                                },
+                                error: function(){
+                                    sending = false;
+                                }
+                            });
+                        });
+                    },
+                    init: function(){
+                        this.initPage();
+                        this.renderData();
+                        this.bindEvent();
+                    }
+                };
+            })();
+            $(function(){
+                tLetternewPage.init();
+            });
+        })(jQuery, window, document);
+    </script>
+</body>
+</html>
