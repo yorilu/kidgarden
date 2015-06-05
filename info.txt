@@ -9,3 +9,20 @@ http://my.kgcrm.net/redmine/projects/kgcrm/repository/revisions/master/show/mobi
 
 API:
 http://my.kgcrm.net/redmine/projects/kgcrm/wiki/Api_interface
+
+storage 结构：
+http://my.kgcrm.net/redmine/projects/kgcrm/wiki/Localstorage%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84
+
+更新storage:
+http://api.kgcrm.net/sys/update_storage
+
+如果你调试教师的话
+教师openid = ox3k3t22bS1z-9IXemNz26Bicc7s
+家长openid= ox3k3txnEpiBk1S18u0z7DZkzK44
+设置cookies http://api.kgcrm.net/sys/info?openid={openid}
+
+注册地址：http://m.kgcrm.net/index0.html
+教师页面：http://m.kgcrm.net/index1.html
+2015/6/5 23:05:14
+小鸡,快跑.. 2015/6/5 23:05:14
+家长页面：http://m.kgcrm.net/index2.html
